@@ -2,13 +2,13 @@ package log
 
 import (
 	"fmt"
-	"go.uber.org/zap/zapcore"
 	"strconv"
 	"strings"
 	"time"
 
 	"bosh-admin/global"
 
+	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 

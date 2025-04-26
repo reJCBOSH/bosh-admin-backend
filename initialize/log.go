@@ -1,9 +1,11 @@
 package initialize
 
 import (
+	"os"
+
 	"bosh-admin/core/log"
 	"bosh-admin/global"
-	"os"
+	"bosh-admin/utils"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -16,7 +18,7 @@ func InitLog() {
 	// 日志按级别分开输出
 	var cores []zapcore.Core
 	startLevel := zapcore.DebugLevel
-	if global.Config.System.Env == "production" {
+	if utils.IsProd() {
 		startLevel = zapcore.InfoLevel
 	}
 	for level := startLevel; level <= zapcore.ErrorLevel; level++ {
