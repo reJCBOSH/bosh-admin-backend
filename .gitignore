@@ -19,5 +19,6 @@
 main
 logs/
 static/
+.idea
 .vscode
 .DS_Store
