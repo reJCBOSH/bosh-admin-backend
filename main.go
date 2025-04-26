@@ -20,6 +20,8 @@ func main() {
 	initialize.InitConfig()
 	// 初始化日志
 	initialize.InitLog()
+	// 初始化参数校验
+	initialize.InitValidator()
 	// 初始化路由
 	router := initialize.InitRouter()
 
