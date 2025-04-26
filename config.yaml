@@ -3,3 +3,12 @@ system:
   name: bosh-admin
   url: 127.0.0.1
   port: 8081
+
+log:
+  rootDir: ./logs
+  format: json
+  timestampFormat: '2006-01-02 15:04:05.000'
+  maxBackups: 3
+  maxSize: 500
+  maxAge: 30
+  compress: true

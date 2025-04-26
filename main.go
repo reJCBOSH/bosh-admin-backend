@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bosh-admin/core/log"
 	"errors"
 	"fmt"
 	"net/http"
@@ -14,6 +15,8 @@ import (
 func main() {
 	// 初始化配置
 	initialize.InitConfig()
+	// 初始化日志
+	initialize.InitLog()
 
 	r := gin.New()
 
@@ -26,6 +29,7 @@ func main() {
 		Addr:    addr,
 		Handler: r,
 	}
+	log.Info("服务已启动", addr)
 
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		panic(err.Error())
