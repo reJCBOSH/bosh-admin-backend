@@ -1,16 +1,16 @@
 package config
 
 type Config struct {
-	System System `mapstructure:"system" json:"system" yaml:"system"` // 系统配置
+	Server Server `mapstructure:"server" json:"server" yaml:"server"` // 服务配置
 	Log    Log    `mapstructure:"log" json:"log" yaml:"log"`          // 日志配置
 }
 
-// System 系统配置
-type System struct {
-	Env  string `mapstructure:"env" json:"env" yaml:"env"`    // 环境值
-	Name string `mapstructure:"name" json:"name" yaml:"name"` // 系统名称
-	Url  string `mapstructure:"url" json:"url" yaml:"url"`    // 系统地址
-	Port int    `mapstructure:"port" json:"port" yaml:"port"` // 系统端口
+// Server 服务配置
+type Server struct {
+	Env  string `mapstructure:"env" json:"env" yaml:"env"`    // 服务环境
+	Name string `mapstructure:"name" json:"name" yaml:"name"` // 服务名称
+	Url  string `mapstructure:"url" json:"url" yaml:"url"`    // 服务地址
+	Port int    `mapstructure:"port" json:"port" yaml:"port"` // 服务端口
 }
 
 // Log 日志配置

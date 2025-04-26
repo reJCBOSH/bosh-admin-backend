@@ -24,7 +24,7 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"success": true})
 	})
 
-	addr := fmt.Sprintf(":%d", global.Config.System.Port)
+	addr := fmt.Sprintf(":%d", global.Config.Server.Port)
 	server := &http.Server{
 		Addr:    addr,
 		Handler: r,
