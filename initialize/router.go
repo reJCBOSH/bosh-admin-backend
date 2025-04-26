@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"bosh-admin/core/log"
+	"bosh-admin/middleware"
 	"bosh-admin/utils"
 
 	"github.com/gin-gonic/gin"
@@ -15,6 +16,8 @@ func InitRouter() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.New()
+	// 跨域中间件
+	r.Use(middleware.Cors())
 	// 使用gin默认Logger、Recovery中间件
 	r.Use(gin.Logger(), gin.Recovery())
 
