@@ -8,8 +8,6 @@ import (
 	"bosh-admin/core/log"
 	"bosh-admin/global"
 	"bosh-admin/initialize"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -17,12 +15,8 @@ func main() {
 	initialize.InitConfig()
 	// 初始化日志
 	initialize.InitLog()
-
-	r := gin.New()
-
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"success": true})
-	})
+	// 初始化路由
+	r := initialize.InitRouter()
 
 	addr := fmt.Sprintf(":%d", global.Config.Server.Port)
 	server := &http.Server{
