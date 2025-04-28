@@ -2,6 +2,7 @@ package log
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -10,6 +11,7 @@ import (
 
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
+	"gorm.io/gorm/logger"
 )
 
 // CustomEncoder 自定义解码器
@@ -77,4 +79,14 @@ func CustomLoggerWriter(suffix string) *CustomLogger {
 		date:   nowDate,
 		suffix: suffix,
 	}
+}
+
+// CustomGormLogger 自定义Gorm日志
+func CustomGormLogger(suffix string) logger.Interface {
+	return logger.New(log.New(CustomLoggerWriter(suffix), "\r\n", log.LstdFlags), logger.Config{
+		SlowThreshold:             200 * time.Millisecond,
+		Colorful:                  false,
+		IgnoreRecordNotFoundError: false,
+		LogLevel:                  logger.Info,
+	})
 }

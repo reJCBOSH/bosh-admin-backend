@@ -12,3 +12,13 @@ log:
   maxSize: 500
   maxAge: 30
   compress: true
+
+mysql:
+  username: root
+  password: 123456ljc
+  ip: 127.0.0.1
+  port: 3306
+  database: bosh-admin
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  maxIdleConns: 10
+  maxOpenConns: 100
