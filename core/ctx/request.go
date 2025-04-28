@@ -1,11 +1,14 @@
 package ctx
 
 import (
+	"errors"
+	"fmt"
+	"strings"
+
 	"bosh-admin/exception"
 	"bosh-admin/global"
-	"fmt"
+
 	"github.com/go-playground/validator/v10"
-	"strings"
 )
 
 func removeTopStruct(fields map[string]string) map[string]string {
@@ -21,7 +24,8 @@ func (c *Context) ValidateParams(req any) (string, any) {
 	err := c.ShouldBind(req)
 	if err != nil {
 		// 获取validator.ValidationErrors类型的errors
-		errs, ok := err.(validator.ValidationErrors)
+		var errs validator.ValidationErrors
+		ok := errors.As(err, &errs)
 		if !ok {
 			return exception.ServerError, err
 		}

@@ -1,10 +1,10 @@
 package initialize
 
 import (
-	"bosh-admin/global"
 	"net/http"
 
 	"bosh-admin/core/log"
+	"bosh-admin/global"
 	"bosh-admin/middleware"
 	"bosh-admin/utils"
 
