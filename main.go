@@ -20,17 +20,25 @@ func main() {
 	initialize.InitConfig()
 	// 初始化日志
 	initialize.InitLog()
+	// 初始化数据库
+	initialize.InitDB()
+	// 程序结束前关闭数据库连接
+	defer func() {
+		if global.GormDB != nil {
+			db, _ := global.GormDB.DB()
+			_ = db.Close()
+		}
+	}()
 	// 初始化参数校验
 	initialize.InitValidator()
 	// 初始化路由
-	router := initialize.InitRouter()
+	initialize.InitRouter()
 
 	addr := fmt.Sprintf(":%d", global.Config.Server.Port)
 	server := &http.Server{
 		Addr:    addr,
-		Handler: router,
+		Handler: global.Router,
 	}
-	time.Sleep(10 * time.Microsecond)
 	log.Info("服务已启动", addr)
 
 	// 优雅关机
@@ -57,5 +65,5 @@ func main() {
 		log.Fatal("服务关闭失败: ", err)
 	}
 
-	log.Info("服务退出")
+	log.Info("服务已退出")
 }

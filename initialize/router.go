@@ -1,6 +1,7 @@
 package initialize
 
 import (
+	"bosh-admin/global"
 	"net/http"
 
 	"bosh-admin/core/log"
@@ -11,7 +12,7 @@ import (
 )
 
 // InitRouter 初始化路由
-func InitRouter() *gin.Engine {
+func InitRouter() {
 	if utils.IsProd() {
 		gin.SetMode(gin.ReleaseMode)
 	}
@@ -27,5 +28,5 @@ func InitRouter() *gin.Engine {
 	})
 
 	log.Info("路由注册完成")
-	return r
+	global.Router = r
 }
