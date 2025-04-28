@@ -22,3 +22,13 @@ mysql:
   config: charset=utf8mb4&parseTime=True&loc=Local
   maxIdleConns: 10
   maxOpenConns: 100
+
+pgsql:
+  host: 127.0.0.1
+  user: postgres
+  password: 123456ljc
+  dbname: bosh-admin
+  port: 5432
+  config: 'sslmode=disable TimeZone=Asia/Shanghai'
+  maxIdleConns: 10
+  maxOpenConns: 100

@@ -12,7 +12,7 @@ import (
 
 // ConnectMysql 连接mysql
 func ConnectMysql(m config.Mysql) *gorm.DB {
-	if m.Username == "" || m.Password == "" || m.IP == "" || m.Port == "" || m.Database == "" {
+	if m.Database == "" {
 		return nil
 	}
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?%s", m.Username, m.Password, m.IP, m.Port, m.Database, m.Config)

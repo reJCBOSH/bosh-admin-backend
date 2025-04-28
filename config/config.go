@@ -4,6 +4,7 @@ type Config struct {
 	Server Server `mapstructure:"server" json:"server" yaml:"server"` // 服务配置
 	Log    Log    `mapstructure:"log" json:"log" yaml:"log"`          // 日志配置
 	Mysql  Mysql  `mapstructure:"mysql" json:"mysql" yaml:"mysql"`    // Mysql 配置
+	Pgsql  Pgsql  `mapstructure:"pgsql" json:"pgsql" yaml:"pgsql"`    // Pgsql 配置
 }
 
 // Server 服务配置
@@ -25,12 +26,25 @@ type Log struct {
 	Compress        bool   `mapstructure:"compress" json:"compress" yaml:"compress"`                      // 是否压缩
 }
 
+// Mysql Mysql 配置
 type Mysql struct {
 	Username     string `mapstructure:"username" json:"username" yaml:"username"`             // 用户名
 	Password     string `mapstructure:"password" json:"password" yaml:"password"`             // 密码
 	IP           string `mapstructure:"ip" json:"ip" yaml:"ip"`                               // IP地址
 	Port         string `mapstructure:"port" json:"port" yaml:"port"`                         // 端口
 	Database     string `mapstructure:"database" json:"database" yaml:"database"`             // 数据库名
+	Config       string `mapstructure:"config" json:"config" yaml:"config"`                   // 连接配置
+	MaxIdleConns int    `mapstructure:"maxIdleConns" json:"maxIdleConns" yaml:"maxIdleConns"` // 空闲中的最大连接数
+	MaxOpenConns int    `mapstructure:"maxOpenConns" json:"maxOpenConns" yaml:"maxOpenConns"` //  打开的最大连接数
+}
+
+// Pgsql Pgsql 配置
+type Pgsql struct {
+	Host         string `mapstructure:"host" json:"host" yaml:"host"`                         // 主机
+	User         string `mapstructure:"user" json:"user" yaml:"user"`                         // 用户名
+	Password     string `mapstructure:"password" json:"password" yaml:"password"`             // 密码
+	Dbname       string `mapstructure:"dbname" json:"dbname" yaml:"dbname"`                   // 数据库名
+	Port         string `mapstructure:"port" json:"port" yaml:"port"`                         // 端口
 	Config       string `mapstructure:"config" json:"config" yaml:"config"`                   // 连接配置
 	MaxIdleConns int    `mapstructure:"maxIdleConns" json:"maxIdleConns" yaml:"maxIdleConns"` // 空闲中的最大连接数
 	MaxOpenConns int    `mapstructure:"maxOpenConns" json:"maxOpenConns" yaml:"maxOpenConns"` //  打开的最大连接数
