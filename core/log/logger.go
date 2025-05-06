@@ -3,6 +3,9 @@ package log
 import (
 	"fmt"
 	"log"
+	"os"
+	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -14,24 +17,68 @@ import (
 	"gorm.io/gorm/logger"
 )
 
+// customEncodeTime 自定义时间编码器
+func customEncodeTime() zapcore.TimeEncoder {
+	return func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+		enc.AppendString(t.Format(global.Config.Log.TimestampFormat))
+	}
+}
+
+// getProjectRoot 获取项目根目录
+func getProjectRoot() string {
+	// 获取调用此函数的文件的路径（通常为日志配置文件）
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		return ""
+	}
+	dir := filepath.Dir(filename)
+	for {
+		// 检查当前目录是否包含go.mod
+		if _, err := os.Stat(filepath.Join(dir, "go.mod")); err == nil {
+			fmt.Println(dir)
+			return dir
+		}
+		// 向上级目录查找
+		parentDir := filepath.Dir(dir)
+		if parentDir == dir {
+			break // 到达文件系统根目录
+		}
+		dir = parentDir
+	}
+	return "" // 未找到
+}
+
+// customEncodeCaller 自定义调用解码器
+func customEncodeCaller(basePath string) zapcore.CallerEncoder {
+	return func(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
+		// 获取相对路径
+		relPath, err := filepath.Rel(basePath, caller.File)
+		if err != nil {
+			relPath = caller.File // 出错则使用原路径
+		} else {
+			relPath = strings.Replace(relPath, "\\", "/", -1)
+		}
+		// 格式化为"文件:行号"
+		enc.AppendString(fmt.Sprintf("%s:%d", relPath, caller.Line))
+	}
+}
+
 // CustomEncoder 自定义解码器
 func CustomEncoder() zapcore.Encoder {
 	var encoder zapcore.Encoder
 	encoderConfig := zapcore.EncoderConfig{
-		MessageKey:    "M",
-		LevelKey:      "L",
-		TimeKey:       "T",
-		NameKey:       "N",
-		CallerKey:     "C",
-		FunctionKey:   "F",
-		StacktraceKey: zapcore.OmitKey,
-		LineEnding:    zapcore.DefaultLineEnding,
-		EncodeLevel:   zapcore.CapitalLevelEncoder,
-		EncodeTime: func(time time.Time, encoder zapcore.PrimitiveArrayEncoder) {
-			encoder.AppendString(time.Format(global.Config.Log.TimestampFormat))
-		},
+		MessageKey:     "M",
+		LevelKey:       "L",
+		TimeKey:        "T",
+		NameKey:        "N",
+		CallerKey:      "C",
+		FunctionKey:    "F",
+		StacktraceKey:  zapcore.OmitKey,
+		LineEnding:     zapcore.DefaultLineEnding,
+		EncodeLevel:    zapcore.CapitalLevelEncoder,
+		EncodeTime:     customEncodeTime(),
 		EncodeDuration: zapcore.SecondsDurationEncoder,
-		EncodeCaller:   zapcore.FullCallerEncoder,
+		EncodeCaller:   customEncodeCaller(getProjectRoot()),
 		EncodeName:     zapcore.FullNameEncoder,
 	}
 	// 解码器格式
