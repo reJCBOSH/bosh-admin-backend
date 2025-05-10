@@ -16,11 +16,7 @@ func ConnectPgsql(p config.Pgsql) *gorm.DB {
 		return nil
 	}
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s %s", p.Host, p.User, p.Password, p.Dbname, p.Port, p.Config)
-	pgsqlConfig := postgres.Config{
-		DSN:                  dsn,
-		PreferSimpleProtocol: true, // 禁用prefer protocol
-	}
-	db, err := gorm.Open(postgres.New(pgsqlConfig), &gorm.Config{
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true, // 禁用自动创建外键约束
 		Logger:                                   log.CustomGormLogger("_pgsql"),
 	})
