@@ -6,6 +6,7 @@ import (
 	"bosh-admin/core/log"
 	"bosh-admin/global"
 	"bosh-admin/middleware"
+	"bosh-admin/router"
 	"bosh-admin/utils"
 
 	"github.com/gin-gonic/gin"
@@ -26,6 +27,8 @@ func InitRouter() {
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"success": true})
 	})
+
+	router.SetApiRouter(r)
 
 	log.Info("路由注册完成")
 	global.Router = r
