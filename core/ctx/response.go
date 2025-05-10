@@ -1,15 +1,25 @@
 package ctx
 
 import (
+	"errors"
 	"net/http"
 
-	"bosh-admin/exception"
+	"bosh-admin/core/exception"
 	"bosh-admin/global"
+
+	"gorm.io/gorm"
 )
 
 const (
 	SUCCESS = true
 	FAIL    = false
+)
+
+const (
+	Success        = "操作成功"
+	ServerError    = "系统服务错误"
+	ParamsError    = "参数错误"
+	RecordNotFound = "记录不存在"
 )
 
 // Response 响应结构体
@@ -36,16 +46,16 @@ func (c *Context) Response(success bool, data any, msg string) {
 
 // Success 成功响应
 func (c *Context) Success(msg ...string) {
-	var exceptionMsg = exception.Success
+	var resMsg = Success
 	if len(msg) > 0 {
-		exceptionMsg = msg[0]
+		resMsg = msg[0]
 	}
-	c.Response(SUCCESS, nil, exceptionMsg)
+	c.Response(SUCCESS, nil, resMsg)
 }
 
 // SuccessWithData 成功数据响应
 func (c *Context) SuccessWithData(data any) {
-	c.Response(SUCCESS, data, exception.Success)
+	c.Response(SUCCESS, data, Success)
 }
 
 // SuccessWithList 成功列表响应
@@ -53,7 +63,7 @@ func (c *Context) SuccessWithList(list any, total int64) {
 	c.Response(SUCCESS, ListData{
 		List:  list,
 		Total: total,
-	}, exception.Success)
+	}, Success)
 }
 
 // SuccessWithDetail 成功详情响应
@@ -63,18 +73,31 @@ func (c *Context) SuccessWithDetail(data any, msg string) {
 
 // Fail 失败响应
 func (c *Context) Fail(msg ...string) {
-	var exceptionMsg = exception.ServerError
+	var resMsg = ServerError
 	if len(msg) > 0 {
-		exceptionMsg = msg[0]
+		resMsg = msg[0]
 	}
-	c.Response(FAIL, nil, exceptionMsg)
+	c.Response(FAIL, nil, resMsg)
 }
 
 // HandlerError 错误处理
-func (c *Context) HandlerError(err any, msg ...string) bool {
+func (c *Context) HandlerError(err error, msg ...string) bool {
 	if err != nil {
 		global.Logger.Error(err)
-		c.Fail(msg...)
+		if len(msg) > 0 {
+			c.Fail(msg...)
+		} else {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				c.Fail(RecordNotFound)
+			} else {
+				ex := new(exception.Exception)
+				if errors.As(err, &ex) {
+					c.Fail(err.Error())
+				} else {
+					c.Fail()
+				}
+			}
+		}
 		return true
 	}
 	return false
