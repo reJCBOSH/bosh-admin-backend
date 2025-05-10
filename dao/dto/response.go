@@ -1,4 +1,4 @@
-package response
+package dto
 
 const (
 	SUCCESS = true

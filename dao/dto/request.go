@@ -1,4 +1,4 @@
-package request
+package dto
 
 // IdRequest id请求
 type IdRequest struct {
