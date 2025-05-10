@@ -5,6 +5,8 @@ import (
 	"gorm.io/gorm"
 )
 
+const DefaultLimit = 10
+
 // Statement 查询构造器
 type Statement struct {
 	db       *gorm.DB
@@ -87,6 +89,27 @@ func (s *Statement) Preload(query string, args ...any) {
 	}
 }
 
+// Pagination 分页
+func (s *Statement) Pagination(pageNo, pageSize int) {
+	if pageNo == -1 {
+		s.other.Offset = -1
+	} else {
+		if pageSize <= 0 {
+			s.other.Limit = DefaultLimit
+		} else {
+			s.other.Limit = pageSize
+		}
+		s.other.Offset = pageSize * (pageNo - 1)
+	}
+}
+
+// OrderBy 排序
+func (s *Statement) OrderBy(orderStr string) {
+	if orderStr != "" {
+		s.other.OrderBy = orderStr
+	}
+}
+
 // Other 其他条件
 func (s *Statement) Other(other Other) {
 	s.other = other
@@ -96,7 +119,7 @@ func (s *Statement) Other(other Other) {
 func PageScope(limit, offset int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if limit <= 0 {
-			limit = 15
+			limit = DefaultLimit
 		}
 		if offset >= 0 {
 			db = db.Offset(offset).Limit(limit)
