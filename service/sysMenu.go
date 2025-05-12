@@ -43,26 +43,25 @@ func getMenuChildrenList(menu *model.SysMenu, treeMap map[uint][]model.SysMenu) 
 	return err
 }
 
-func (svc *SysMenuSvc) GetMenus(title string, pageNo, pageSize int) ([]model.SysMenu, int64, error) {
+func (svc *SysMenuSvc) GetMenuList(title string, pageNo, pageSize int) ([]model.SysMenu, int64, error) {
 	s := dao.NewStatement()
 	if title != "" {
 		s.Where("title LIKE ?", "%"+title+"%")
 	}
 	s.Pagination(pageNo, pageSize)
 	s.OrderBy("display_order DESC")
-	menus, total, err := dao.QueryList(model.SysMenu{}, s)
-	return menus, total, err
+	return dao.QueryList(model.SysMenu{}, s)
 }
 
 func (svc *SysMenuSvc) GetMenuById(id any) (model.SysMenu, error) {
 	return dao.QueryById[model.SysMenu](id)
 }
 
-func (svc *SysMenuSvc) AddMenu(menu model.SysMenu) error {
+func (svc *SysMenuSvc) AddMenu(menu dto.AddMenuRequest) error {
 	s := dao.NewStatement()
 	if menu.MenuType < 3 {
-		s.Where("a.menu_type < ?", 3)
-		s.Where("a.name = ?", menu.Name)
+		s.Where("menu_type < ?", 3)
+		s.Where("name = ?", menu.Name)
 		duplicateName, err := dao.Count(model.SysMenu{}, s)
 		if err != nil {
 			return err
@@ -71,8 +70,8 @@ func (svc *SysMenuSvc) AddMenu(menu model.SysMenu) error {
 			return exception.NewException("路由名称已存在，必须保持唯一")
 		}
 	} else {
-		s.Where("a.parent_id = ?", menu.ParentId)
-		s.Where("a.auth_code = ?", menu.AuthCode)
+		s.Where("parent_id = ?", menu.ParentId)
+		s.Where("auth_code = ?", menu.AuthCode)
 		duplicateAuth, err := dao.Count(model.SysMenu{}, s)
 		if err != nil {
 			return err
@@ -81,18 +80,18 @@ func (svc *SysMenuSvc) AddMenu(menu model.SysMenu) error {
 			return exception.NewException("权限标识已存在")
 		}
 	}
-	return dao.Create(&menu).Error
+	return dao.Create(&menu, "sys_menu").Error
 }
 
-func (svc *SysMenuSvc) EditMenu(menu model.SysMenu) error {
+func (svc *SysMenuSvc) EditMenu(menu dto.EditMenuRequest) error {
 	m, err := dao.QueryById[model.SysMenu](menu.Id)
 	if err != nil {
 		return err
 	}
 	if m.MenuType < 3 && m.Name != menu.Name {
 		s := dao.NewStatement()
-		s.Where("a.menu_type < ?", 3)
-		s.Where("a.name = ?", menu.Name)
+		s.Where("menu_type < ?", 3)
+		s.Where("name = ?", menu.Name)
 		duplicateName, err := dao.Count(model.SysMenu{}, s)
 		if err != nil {
 			return err
@@ -101,7 +100,7 @@ func (svc *SysMenuSvc) EditMenu(menu model.SysMenu) error {
 			return exception.NewException("路由名称已存在，必须保持唯一")
 		}
 	}
-	return dao.Save(&menu).Error
+	return dao.Save(&menu, "sys_menu").Error
 }
 
 func (svc *SysMenuSvc) DelMenu(id any) error {
@@ -129,12 +128,12 @@ func (svc *SysMenuSvc) DelMenu(id any) error {
 		tx.Rollback()
 		return err
 	}
-	// TODO 删除角色-菜单关联
-	//err = tx.Where("menu_id = ?", id).Delete(&model.SysRoleMenu{}).Error
-	//if err != nil {
-	//	tx.Rollback()
-	//	return err
-	//}
+	// 删除角色-菜单关联
+	err = tx.Where("menu_id = ?", id).Delete(&model.SysRoleMenu{}).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
 	// 删除按钮子菜单及角色-按钮子菜单关联
 	if menu.MenuType < 3 {
 		var btnIds []uint
@@ -150,12 +149,12 @@ func (svc *SysMenuSvc) DelMenu(id any) error {
 				tx.Rollback()
 				return err
 			}
-			// TODO 删除角色-按钮子菜单关联
-			//err = tx.Where("menu_id IN ?", btnIds).Delete(&model.SysRoleMenu{}).Error
-			//if err != nil {
-			//	tx.Rollback()
-			//	return err
-			//}
+			// 删除角色-按钮子菜单关联
+			err = tx.Where("menu_id IN ?", btnIds).Delete(&model.SysRoleMenu{}).Error
+			if err != nil {
+				tx.Rollback()
+				return err
+			}
 		}
 	}
 	tx.Commit()

@@ -47,6 +47,7 @@ type GetMenuDetailResponse struct {
 }
 
 type AddMenuRequest struct {
+	dao.AddBasicModel
 	MenuBasicItem
 }
 

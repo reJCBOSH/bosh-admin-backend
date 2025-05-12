@@ -3,16 +3,17 @@ package api
 import (
 	"bosh-admin/core/ctx"
 	"bosh-admin/dao/dto"
-	"bosh-admin/dao/model"
 	"bosh-admin/service"
 )
 
 type SysMenuHandler struct {
-	svc service.SysMenuSvc
+	svc *service.SysMenuSvc
 }
 
 func NewSysMenuHandler() *SysMenuHandler {
-	return &SysMenuHandler{}
+	return &SysMenuHandler{
+		svc: service.NewSysMenuSvc(),
+	}
 }
 
 func (h *SysMenuHandler) GetMenuTree(c *ctx.Context) {
@@ -29,7 +30,7 @@ func (h *SysMenuHandler) GetMenuList(c *ctx.Context) {
 	if c.HandlerError(err, msg) {
 		return
 	}
-	menus, total, err := h.svc.GetMenus(req.Title, req.PageNo, req.PageSize)
+	menus, total, err := h.svc.GetMenuList(req.Title, req.PageNo, req.PageSize)
 	if c.HandlerError(err) {
 		return
 	}
@@ -63,7 +64,10 @@ func (h *SysMenuHandler) GetMenuList(c *ctx.Context) {
 			},
 		})
 	}
-	c.SuccessWithList(list, total)
+	c.SuccessWithData(dto.GetMenuListResponse{
+		List:  list,
+		Total: total,
+	})
 }
 
 func (h *SysMenuHandler) GetMenuInfo(c *ctx.Context) {
@@ -112,31 +116,7 @@ func (h *SysMenuHandler) AddMenu(c *ctx.Context) {
 	if c.HandlerError(err, msg) {
 		return
 	}
-	menu := model.SysMenu{
-		Path:            req.Path,
-		Name:            req.Name,
-		Redirect:        req.Redirect,
-		Component:       req.Component,
-		ParentId:        req.ParentId,
-		MenuType:        req.MenuType,
-		Title:           req.Title,
-		Icon:            req.Icon,
-		DisplayOrder:    req.DisplayOrder,
-		ExtraIcon:       req.ExtraIcon,
-		Transition:      req.Transition,
-		EnterTransition: req.EnterTransition,
-		LeaveTransition: req.LeaveTransition,
-		ActivePath:      req.ActivePath,
-		AuthCode:        req.AuthCode,
-		FrameSrc:        req.FrameSrc,
-		FrameLoading:    req.FrameLoading,
-		ShowLink:        req.ShowLink,
-		ShowParent:      req.ShowParent,
-		KeepAlive:       req.KeepAlive,
-		HiddenTag:       req.HiddenTag,
-		FixedTag:        req.FixedTag,
-	}
-	err = h.svc.AddMenu(menu)
+	err = h.svc.AddMenu(req)
 	if c.HandlerError(err) {
 		return
 	}
@@ -149,7 +129,11 @@ func (h *SysMenuHandler) EditMenu(c *ctx.Context) {
 	if c.HandlerError(err, msg) {
 		return
 	}
-
+	err = h.svc.EditMenu(req)
+	if c.HandlerError(err) {
+		return
+	}
+	c.Success()
 }
 
 func (h *SysMenuHandler) DelMenu(c *ctx.Context) {
