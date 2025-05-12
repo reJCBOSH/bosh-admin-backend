@@ -29,16 +29,27 @@ func Begin() *gorm.DB {
 	return GormDB().Begin()
 }
 
-func Create(value interface{}) *gorm.DB {
-	return GormDB().Create(value)
+func Create(value interface{}, table ...string) *gorm.DB {
+	DB := GormDB()
+	if len(table) > 0 {
+		DB = DB.Table(table[0])
+	}
+	return DB.Create(value)
 }
 
-func Save(value interface{}) *gorm.DB {
+func Save(value interface{}, table ...string) *gorm.DB {
+	DB := GormDB()
+	if len(table) > 0 {
+		DB = DB.Table(table[0])
+	}
 	return GormDB().Save(value)
 }
 
 func QueryList[T Basic](model T, s *Statement) (data []T, total int64, err error) {
 	DB := s.Format().Model(&model)
+	if s.tableName != "" {
+		DB = DB.Table(s.tableName)
+	}
 	s.fields.Range(func(query interface{}, args []interface{}) bool {
 		DB = DB.Select(query, args...)
 		return true
@@ -62,6 +73,9 @@ func QueryList[T Basic](model T, s *Statement) (data []T, total int64, err error
 
 func QueryOne[T Basic](model T, s *Statement) (data T, err error) {
 	DB := s.Format().Model(&model)
+	if s.tableName != "" {
+		DB = DB.Table(s.tableName)
+	}
 	s.fields.Range(func(query interface{}, args []interface{}) bool {
 		DB = DB.Select(query, args...)
 		return true

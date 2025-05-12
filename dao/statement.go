@@ -9,18 +9,20 @@ const DefaultLimit = 10
 
 // Statement 查询构造器
 type Statement struct {
-	db       *gorm.DB
-	where    *maputil.OrderedMap[interface{}, []interface{}]
-	fields   *maputil.OrderedMap[interface{}, []interface{}]
-	joins    *maputil.OrderedMap[string, []interface{}]
-	preloads *maputil.OrderedMap[string, []interface{}]
-	other    Other
+	db        *gorm.DB
+	tableName string
+	where     *maputil.OrderedMap[interface{}, []interface{}]
+	fields    *maputil.OrderedMap[interface{}, []interface{}]
+	joins     *maputil.OrderedMap[string, []interface{}]
+	preloads  *maputil.OrderedMap[string, []interface{}]
+	other     Other
 }
 
 // NewStatement 创建查询构造器
 func NewStatement(other ...Other) *Statement {
 	s := new(Statement)
 	s.db = GormDB()
+	s.tableName = ""
 	s.where = maputil.NewOrderedMap[any, []any]()
 	s.fields = maputil.NewOrderedMap[any, []any]()
 	s.joins = maputil.NewOrderedMap[string, []any]()
@@ -36,11 +38,16 @@ func NewStatement(other ...Other) *Statement {
 // Init 重置查询构造器
 func (s *Statement) Init() {
 	s.db = GormDB()
+	s.tableName = ""
 	s.where = maputil.NewOrderedMap[any, []any]()
 	s.fields = maputil.NewOrderedMap[any, []any]()
 	s.joins = maputil.NewOrderedMap[string, []any]()
 	s.preloads = maputil.NewOrderedMap[string, []any]()
 	s.other = Other{}
+}
+
+func (s *Statement) Table(tableName string) {
+	s.tableName = tableName
 }
 
 // InitWhere 重置查询构造器where
