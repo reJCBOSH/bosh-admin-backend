@@ -11,5 +11,6 @@ func SetApiRouter(router *gin.Engine) {
 	{
 		api.SetMenuRouter(group)
 		api.SetDeptRouter(group)
+		api.SetRoleRouter(group)
 	}
 }
