@@ -1,0 +1,121 @@
+package api
+
+import (
+	"bosh-admin/core/ctx"
+	"bosh-admin/dao/dto"
+	"bosh-admin/service"
+)
+
+type SysUser struct {
+	svc *service.SysUserSvc
+}
+
+func NewSysUser(svc *service.SysUserSvc) *SysUser {
+	return &SysUser{svc: svc}
+}
+
+func (h *SysUser) Login(c *ctx.Context) {
+	var req dto.LoginRequest
+	msg, err := c.ValidateParams(&req)
+	if c.HandlerError(err, msg) {
+		return
+	}
+	user, err := h.svc.Login(req.Username, req.Password, req.Captcha, req.CaptchaId)
+	if c.HandlerError(err) {
+		return
+	}
+	c.SuccessWithData(dto.LoginResponse{
+		Avatar:       user.Avatar,
+		Username:     user.Username,
+		Nickname:     user.Nickname,
+		PwdUpdatedAt: user.PwdUpdatedAt.String(),
+		Roles:        []string{user.Role.RoleCode},
+		AccessToken:  "",
+		RefreshToken: "",
+		Expires:      0,
+	})
+}
+
+func (h *SysUser) GetUserList(c *ctx.Context) {
+	var req dto.GetUserListRequest
+	msg, err := c.ValidateParams(&req)
+	if c.HandlerError(err, msg) {
+		return
+	}
+	data, total, err := h.svc.GetUserList(req.Username, req.Nickname, req.Gender, req.Status, req.RoleId, req.DeptId, req.PageNo, req.PageSize)
+	if c.HandlerError(err) {
+		return
+	}
+	var list []dto.GetUserListItem
+	for _, v := range data {
+		list = append(list, dto.GetUserListItem{
+			Id:       v.Id,
+			Username: v.Username,
+			Avatar:   v.Avatar,
+			Nickname: v.Nickname,
+			Gender:   v.Gender,
+			Status:   v.Status,
+			RoleId:   v.RoleId,
+			DeptId:   v.DeptId,
+			Remark:   v.Remark,
+			DeptName: v.Dept.DeptName,
+			RoleName: v.Role.RoleName,
+		})
+	}
+	c.SuccessWithData(dto.GetUserListResponse{
+		List:  list,
+		Total: total,
+	})
+}
+
+func (h *SysUser) GetUserInfo(c *ctx.Context) {
+	var req dto.IdRequest
+	msg, err := c.ValidateParams(&req)
+	if c.HandlerError(err, msg) {
+		return
+	}
+	user, err := h.svc.GetUserById(req.Id)
+	if c.HandlerError(err) {
+		return
+	}
+	c.SuccessWithData(user)
+}
+
+func (h *SysUser) AddUser(c *ctx.Context) {
+	var req dto.AddUserRequest
+	msg, err := c.ValidateParams(&req)
+	if c.HandlerError(err, msg) {
+		return
+	}
+	err = h.svc.AddUser(req)
+	if c.HandlerError(err) {
+		return
+	}
+	c.Success()
+}
+
+func (h *SysUser) EditUser(c *ctx.Context) {
+	var req dto.EditUserRequest
+	msg, err := c.ValidateParams(&req)
+	if c.HandlerError(err, msg) {
+		return
+	}
+	err = h.svc.EditUser(req)
+	if c.HandlerError(err) {
+		return
+	}
+	c.Success()
+}
+
+func (h *SysUser) DelUser(c *ctx.Context) {
+	var req dto.IdRequest
+	msg, err := c.ValidateParams(&req)
+	if c.HandlerError(err, msg) {
+		return
+	}
+	err = h.svc.DelUser(req.Id)
+	if c.HandlerError(err) {
+		return
+	}
+	c.Success()
+}

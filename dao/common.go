@@ -7,7 +7,10 @@ import (
 	"bosh-admin/global"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
+
+var NotFound = gorm.ErrRecordNotFound
 
 // GormDB 获取gorm.DB
 func GormDB() *gorm.DB {
@@ -43,6 +46,10 @@ func Save(value interface{}, table ...string) *gorm.DB {
 		DB = DB.Table(table[0])
 	}
 	return GormDB().Save(value)
+}
+
+func Expr(query string, args ...interface{}) clause.Expr {
+	return gorm.Expr(query, args...)
 }
 
 func QueryList[T Basic](model T, s *Statement) (data []T, total int64, err error) {

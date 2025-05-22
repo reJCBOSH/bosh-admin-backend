@@ -21,6 +21,7 @@ type SysUser struct {
 	DeptId        uint           `gorm:"dept_id" json:"deptId"`                       // 部门id
 	Remark        string         `gorm:"remark" json:"remark"`                        // 备注
 	Role          SysRole        `gorm:"foreignKey:RoleId;references:Id" json:"role"` // 角色
+	Dept          SysDept        `gorm:"foreignKey:DeptId;references:Id" json:"dept"` // 部门
 }
 
 // TableName sys_user
