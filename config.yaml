@@ -39,3 +39,8 @@ jwt:
   accessDuration: 3600
   refreshDuration: 86400
   bufferDuration: 300
+
+captcha:
+  keyLong: 6
+  imgWidth: 240
+  imgHeight: 80

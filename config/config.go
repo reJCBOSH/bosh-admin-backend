@@ -1,11 +1,12 @@
 package config
 
 type Config struct {
-	Server Server `mapstructure:"server" json:"server" yaml:"server"` // 服务配置
-	Log    Log    `mapstructure:"log" json:"log" yaml:"log"`          // 日志配置
-	Mysql  Mysql  `mapstructure:"mysql" json:"mysql" yaml:"mysql"`    // Mysql 配置
-	Pgsql  Pgsql  `mapstructure:"pgsql" json:"pgsql" yaml:"pgsql"`    // Pgsql 配置
-	JWT    JWT    `mapstructure:"jwt" json:"jwt" yaml:"jwt"`          // JWT 配置
+	Server  Server  `mapstructure:"server" json:"server" yaml:"server"`    // 服务配置
+	Log     Log     `mapstructure:"log" json:"log" yaml:"log"`             // 日志配置
+	Mysql   Mysql   `mapstructure:"mysql" json:"mysql" yaml:"mysql"`       // Mysql 配置
+	Pgsql   Pgsql   `mapstructure:"pgsql" json:"pgsql" yaml:"pgsql"`       // Pgsql 配置
+	JWT     JWT     `mapstructure:"jwt" json:"jwt" yaml:"jwt"`             // JWT 配置
+	Captcha Captcha `mapstructure:"captcha" json:"captcha" yaml:"captcha"` // 图片验证码配置
 }
 
 // Server 服务配置
@@ -58,4 +59,11 @@ type JWT struct {
 	AccessDuration  int64  `mapstructure:"accessDuration" json:"accessDuration" yaml:"accessDuration"`    // access token 有效时长
 	RefreshDuration int64  `mapstructure:"refreshDuration" json:"refreshDuration" yaml:"refreshDuration"` // refresh token 有效时长
 	BufferDuration  int64  `mapstructure:"bufferDuration" json:"bufferDuration" yaml:"bufferDuration"`    // 缓冲时长
+}
+
+// Captcha 图片验证码配置
+type Captcha struct {
+	KeyLong   int `mapstructure:"keyLong" json:"keyLong" yaml:"keyLong"`       // 验证码长度
+	ImgWidth  int `mapstructure:"imgWidth" json:"imgWidth" yaml:"imgWidth"`    // 图片宽度
+	ImgHeight int `mapstructure:"imgHeight" json:"imgHeight" yaml:"imgHeight"` // 图片高度
 }
