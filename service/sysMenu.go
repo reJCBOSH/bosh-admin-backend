@@ -163,14 +163,87 @@ func (svc *SysMenuSvc) DelMenu(id any) error {
 
 // getAsyncRoutesChildrenList 获取pure admin子菜单列表
 func getAsyncRoutesChildrenList(menu *dto.PureMenu, treeMap map[uint][]dto.PureMenu) (err error) {
-	menu.Children = treeMap[menu.ID]
+	menu.Children = treeMap[menu.Id]
 	for i := 0; i < len(menu.Children); i++ {
 		err = getAsyncRoutesChildrenList(&menu.Children[i], treeMap)
 	}
 	return err
 }
 
-// TODO 获取pure admin菜单
-//func (svc *SysMenuSvc) GetAsyncRoutes(roleId uint, roleCode string) ([]dto.PureMenu, error) {
-//
-//}
+// GetAsyncRoutes 获取pure admin菜单
+func (svc *SysMenuSvc) GetAsyncRoutes(roleId uint, roleCode string) ([]dto.PureMenu, error) {
+	var roleMenuIds []uint
+	if roleCode == "superAdmin" {
+		err := dao.GormDB().Model(&model.SysRoleMenu{}).Where("role_id = ?", roleId).Pluck("menu_id", &roleMenuIds).Error
+		if err != nil {
+			return nil, err
+		}
+	}
+	var buttons []model.SysMenu
+	DB := dao.GormDB()
+	if roleCode != "superAdmin" {
+		DB = DB.Where("id IN ?", roleMenuIds)
+	}
+	err := DB.Where("menu_type < ?", 3).Order("display_order DESC").Find(&buttons).Error
+	if err != nil {
+		return nil, err
+	}
+	btnMap := make(map[uint][]model.SysMenu)
+	for _, button := range buttons {
+		btnMap[button.ParentId] = append(btnMap[button.ParentId], button)
+	}
+	var menus []model.SysMenu
+	DB = dao.GormDB()
+	if roleCode == "superAdmin" {
+		DB = DB.Where("id IN ?", roleMenuIds)
+	}
+	err = DB.Where("menu_type != ?", 3).Order("display_order DESC").Find(&menus).Error
+	if err != nil {
+		return nil, err
+	}
+	menuMap := make(map[uint][]dto.PureMenu)
+	for _, menu := range menus {
+		pureMneu := dto.PureMenu{
+			Id:        menu.Id,
+			ParentId:  menu.ParentId,
+			Path:      menu.Path,
+			Name:      menu.Name,
+			Redirect:  menu.Redirect,
+			Component: menu.Component,
+			Meta: dto.PureMenuMeta{
+				Title:        menu.Title,
+				Icon:         menu.Icon,
+				ExtraIcon:    menu.ExtraIcon,
+				ShowLink:     menu.ShowLink,
+				ShowParent:   menu.ShowParent,
+				KeepAlive:    menu.KeepAlive,
+				FrameSrc:     menu.FrameSrc,
+				FrameLoading: menu.FrameLoading,
+				Transition: dto.PureMenuTransition{
+					Name:            menu.Transition,
+					EnterTransition: menu.EnterTransition,
+					LeaveTransition: menu.LeaveTransition,
+				},
+				HiddenTag:  menu.HiddenTag,
+				ActivePath: menu.ActivePath,
+				FixedTag:   menu.FixedTag,
+			},
+		}
+		if btnArr, ok := btnMap[menu.Id]; ok {
+			var auths []string
+			for _, btn := range btnArr {
+				auths = append(auths, btn.AuthCode)
+			}
+			pureMneu.Meta.Auths = auths
+		}
+		menuMap[menu.ParentId] = append(menuMap[menu.ParentId], pureMneu)
+	}
+	routers := menuMap[0]
+	for i := 0; i < len(routers); i++ {
+		err = getAsyncRoutesChildrenList(&routers[i], menuMap)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return routers, nil
+}

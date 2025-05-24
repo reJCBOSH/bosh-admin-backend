@@ -32,3 +32,10 @@ pgsql:
   config: 'sslmode=disable TimeZone=Asia/Shanghai'
   maxIdleConns: 10
   maxOpenConns: 100
+
+jwt:
+  accessSecret: 59ce1c6ba62f1459581d7d01c4c04c52
+  refreshSecret: 23d6e2be089bed49550f30814e08ad60
+  accessDuration: 3600
+  refreshDuration: 86400
+  bufferDuration: 300

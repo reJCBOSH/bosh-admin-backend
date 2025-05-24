@@ -7,12 +7,14 @@ import (
 )
 
 type SysRoleHandler struct {
-	svc *service.SysRoleSvc
+	svc    *service.SysRoleSvc
+	jwtSvc *service.JWTSvc
 }
 
 func NewSysRoleHandler() *SysRoleHandler {
 	return &SysRoleHandler{
-		svc: service.NewSysRoleSvc(),
+		svc:    service.NewSysRoleSvc(),
+		jwtSvc: service.NewJWTSvc(),
 	}
 }
 
@@ -117,8 +119,9 @@ func (h *SysRoleHandler) SetRoleMenuAuth(c *ctx.Context) {
 	if c.HandlerError(err) {
 		return
 	}
-	// TODO 判断JWT内是否同一角色
-	c.Success()
+	// 判断是否同一角色
+	userClaims := h.jwtSvc.GetUserClaims(c)
+	c.SuccessWithData(req.RoleId == userClaims.RoleId)
 }
 
 func (h *SysRoleHandler) GetRoleDeptIds(c *ctx.Context) {
@@ -144,8 +147,9 @@ func (h *SysRoleHandler) SetRoleDataAuth(c *ctx.Context) {
 	if c.HandlerError(err) {
 		return
 	}
-	// TODO 判断JWT内是否同一角色
-	c.Success()
+	// 判断是否同一角色
+	userClaims := h.jwtSvc.GetUserClaims(c)
+	c.SuccessWithData(req.RoleId == userClaims.RoleId)
 }
 
 func (h *SysRoleHandler) SetRoleStatus(c *ctx.Context) {
@@ -154,9 +158,9 @@ func (h *SysRoleHandler) SetRoleStatus(c *ctx.Context) {
 	if c.HandlerError(err, msg) {
 		return
 	}
-	// TODO JWT获取当前角色ID
-	var currentRoleId uint = 1
-	err = h.svc.SetRoleStatus(currentRoleId, req.RoleId, req.Status)
+	// 判断是否同一角色
+	userClaims := h.jwtSvc.GetUserClaims(c)
+	err = h.svc.SetRoleStatus(userClaims.RoleId, req.RoleId, req.Status)
 	if c.HandlerError(err) {
 		return
 	}

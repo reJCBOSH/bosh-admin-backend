@@ -9,8 +9,10 @@ import (
 func SetApiRouter(router *gin.Engine) {
 	group := router.Group("/api")
 	{
+		api.SetBasicRouter(group)
 		api.SetMenuRouter(group)
 		api.SetDeptRouter(group)
 		api.SetRoleRouter(group)
+		api.SetUserRouter(group)
 	}
 }

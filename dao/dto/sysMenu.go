@@ -58,7 +58,7 @@ type EditMenuRequest struct {
 
 // PureMenu Pure Admin 路由菜单
 type PureMenu struct {
-	ID        uint         `json:"-"`                   // 菜单Id
+	Id        uint         `json:"-"`                   // 菜单Id
 	ParentId  uint         `json:"-"`                   // 父级菜单Id
 	Path      string       `json:"path"`                // 路由地址
 	Name      string       `json:"name"`                // 路由名称(必须保持唯一)

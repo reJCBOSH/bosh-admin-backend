@@ -20,6 +20,16 @@ type LoginResponse struct {
 	Expires      int64    `json:"expires"`      // access token过期时间戳
 }
 
+type RefreshTokenRequest struct {
+	RefreshToken string `json:"refreshToken" form:"refreshToken" binding:"required"` // refresh token
+}
+
+type RefreshTokenResponse struct {
+	AccessToken  string `json:"accessToken"`  // access token
+	RefreshToken string `json:"refreshToken"` // refresh token
+	Expires      int64  `json:"expires"`      // access token过期时间戳
+}
+
 type GetUserListRequest struct {
 	Pagination
 	Username string `json:"username" form:"username"`                              // 用户名

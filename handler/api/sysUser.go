@@ -7,11 +7,12 @@ import (
 )
 
 type SysUser struct {
-	svc *service.SysUserSvc
+	svc    *service.SysUserSvc
+	jwtSvc *service.JWTSvc
 }
 
-func NewSysUser(svc *service.SysUserSvc) *SysUser {
-	return &SysUser{svc: svc}
+func NewSysUserHandler() *SysUser {
+	return &SysUser{svc: service.NewSysUserSvc(), jwtSvc: service.NewJWTSvc()}
 }
 
 func (h *SysUser) Login(c *ctx.Context) {
@@ -24,15 +25,36 @@ func (h *SysUser) Login(c *ctx.Context) {
 	if c.HandlerError(err) {
 		return
 	}
+	accessToken, refreshToken, expires, err := h.jwtSvc.UserLogin(user)
+	if c.HandlerError(err) {
+		return
+	}
 	c.SuccessWithData(dto.LoginResponse{
 		Avatar:       user.Avatar,
 		Username:     user.Username,
 		Nickname:     user.Nickname,
 		PwdUpdatedAt: user.PwdUpdatedAt.String(),
 		Roles:        []string{user.Role.RoleCode},
-		AccessToken:  "",
-		RefreshToken: "",
-		Expires:      0,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		Expires:      expires,
+	})
+}
+
+func (h *SysUser) RefreshToken(c *ctx.Context) {
+	var req dto.RefreshTokenRequest
+	msg, err := c.ValidateParams(&req)
+	if c.HandlerError(err, msg) {
+		return
+	}
+	accessToken, refreshToken, expires, err := h.jwtSvc.RefreshToken(req.RefreshToken)
+	if c.HandlerError(err) {
+		return
+	}
+	c.SuccessWithData(dto.RefreshTokenResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		Expires:      expires,
 	})
 }
 
@@ -113,7 +135,12 @@ func (h *SysUser) DelUser(c *ctx.Context) {
 	if c.HandlerError(err, msg) {
 		return
 	}
-	err = h.svc.DelUser(req.Id)
+	userClaims := h.jwtSvc.GetUserClaims(c)
+	if userClaims == nil {
+		c.Fail(ctx.ServerError)
+		return
+	}
+	err = h.svc.DelUser(userClaims.UserId, req.Id)
 	if c.HandlerError(err) {
 		return
 	}

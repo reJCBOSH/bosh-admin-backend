@@ -81,9 +81,21 @@ func (svc *SysUserSvc) EditUser(user dto.EditUserRequest) error {
 	return dao.Save(user, "sys_user").Error
 }
 
-func (svc *SysUserSvc) DelUser(id any) error {
-	// TODO 判断是否是超级管理员或者自杀行为
-	return dao.DelById(id)
+func (svc *SysUserSvc) DelUser(currentUserId, id uint) error {
+	if currentUserId == id {
+		return exception.NewException("删除失败，自杀失败")
+	}
+	s := dao.NewStatement()
+	s.Where("id = ?", id)
+	s.Preload("Role")
+	user, err := dao.QueryOne(model.SysUser{}, s)
+	if err != nil {
+		return err
+	}
+	if user.Role.RoleCode == "superAdmin" {
+		return exception.NewException("删除失败，超级管理员不能删除")
+	}
+	return dao.DelById[model.SysUser](id)
 }
 
 func (svc *SysUserSvc) Login(username, password, captcha, captchaId string) (*model.SysUser, error) {
@@ -118,8 +130,6 @@ func (svc *SysUserSvc) Login(username, password, captcha, captchaId string) (*mo
 		}
 		return nil, exception.NewException(fmt.Sprintf("密码错误，剩余%d次尝试机会，超出则冻结账号", user.PwdRemainTime-1))
 	}
-	// TODO JWT
-
 	tx := dao.Begin()
 	if user.PwdRemainTime < 5 {
 		if err = tx.Model(model.SysUser{}).Where("id = ?", user.Id).UpdateColumn("pwd_remain_time", 5).Error; err != nil {

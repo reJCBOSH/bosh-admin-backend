@@ -5,6 +5,7 @@ type Config struct {
 	Log    Log    `mapstructure:"log" json:"log" yaml:"log"`          // 日志配置
 	Mysql  Mysql  `mapstructure:"mysql" json:"mysql" yaml:"mysql"`    // Mysql 配置
 	Pgsql  Pgsql  `mapstructure:"pgsql" json:"pgsql" yaml:"pgsql"`    // Pgsql 配置
+	JWT    JWT    `mapstructure:"jwt" json:"jwt" yaml:"jwt"`          // JWT 配置
 }
 
 // Server 服务配置
@@ -48,4 +49,13 @@ type Pgsql struct {
 	Config       string `mapstructure:"config" json:"config" yaml:"config"`                   // 连接配置
 	MaxIdleConns int    `mapstructure:"maxIdleConns" json:"maxIdleConns" yaml:"maxIdleConns"` // 空闲中的最大连接数
 	MaxOpenConns int    `mapstructure:"maxOpenConns" json:"maxOpenConns" yaml:"maxOpenConns"` //  打开的最大连接数
+}
+
+// JWT JWT配置
+type JWT struct {
+	AccessSecret    string `mapstructure:"accessSecret" json:"accessSecret" yaml:"accessSecret"`          // access token 签名密钥
+	RefreshSecret   string `mapstructure:"refreshSecret" json:"refreshSecret" yaml:"refreshSecret"`       // refresh token 签名密钥
+	AccessDuration  int64  `mapstructure:"accessDuration" json:"accessDuration" yaml:"accessDuration"`    // access token 有效时长
+	RefreshDuration int64  `mapstructure:"refreshDuration" json:"refreshDuration" yaml:"refreshDuration"` // refresh token 有效时长
+	BufferDuration  int64  `mapstructure:"bufferDuration" json:"bufferDuration" yaml:"bufferDuration"`    // 缓冲时长
 }
