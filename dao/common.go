@@ -52,8 +52,9 @@ func Expr(query string, args ...interface{}) clause.Expr {
 	return gorm.Expr(query, args...)
 }
 
-func QueryList[T any](model T, s *Statement) (data []T, total int64, err error) {
-	DB := s.Format().Model(&model)
+func QueryList[T any](s *Statement) (data []T, total int64, err error) {
+	model := new(T)
+	DB := s.Format().Model(model)
 	if s.tableName != "" {
 		DB = DB.Table(s.tableName)
 	}
@@ -65,9 +66,11 @@ func QueryList[T any](model T, s *Statement) (data []T, total int64, err error) 
 		DB = DB.Joins(query, args...)
 		return true
 	})
-	err = DB.Count(&total).Error
-	if err != nil {
-		return
+	if s.other.Offset >= 0 && s.other.Limit > 0 {
+		err = DB.Count(&total).Error
+		if err != nil {
+			return
+		}
 	}
 	DB = DB.Scopes(OtherScope(s.other))
 	s.preloads.Range(func(query string, args []interface{}) bool {
@@ -78,8 +81,9 @@ func QueryList[T any](model T, s *Statement) (data []T, total int64, err error) 
 	return
 }
 
-func QueryOne[T any](model T, s *Statement) (data T, err error) {
-	DB := s.Format().Model(&model)
+func QueryOne[T any](s *Statement) (data T, err error) {
+	model := new(T)
+	DB := s.Format().Model(model)
 	if s.tableName != "" {
 		DB = DB.Table(s.tableName)
 	}
@@ -91,6 +95,11 @@ func QueryOne[T any](model T, s *Statement) (data T, err error) {
 		DB = DB.Joins(query, args...)
 		return true
 	})
+	s.preloads.Range(func(query string, args []interface{}) bool {
+		DB = DB.Preload(query, args...)
+		return true
+	})
+	DB = DB.Scopes(OtherScope(s.other))
 	s.preloads.Range(func(query string, args []interface{}) bool {
 		DB = DB.Preload(query, args...)
 		return true
@@ -112,19 +121,21 @@ func DelById[T any](id any) error {
 }
 
 // Count 统计数量
-func Count[T any](model T, s *Statement) (num int64, err error) {
-	err = s.Format().Model(&model).Count(&num).Error
+func Count[T any](s *Statement) (num int64, err error) {
+	model := new(T)
+	err = s.Format().Model(model).Count(&num).Error
 	return
 }
 
 // Sum 求和
-func Sum[T any](model T, s *Statement) (num float64, err error) {
+func Sum[T any](s *Statement) (num float64, err error) {
+	model := new(T)
 	fields := s.fields.Keys()
 	if len(fields) == 0 || fields[0] == "" {
 		err = errors.New("求和字段错误")
 		return
 	}
 	field := fields[0]
-	err = s.Format().Model(&model).Pluck(fmt.Sprintf("COALESCE(SUM(%s), 0)", field), &num).Error
+	err = s.Format().Model(model).Pluck(fmt.Sprintf("COALESCE(SUM(%s), 0)", field), &num).Error
 	return
 }

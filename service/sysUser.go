@@ -38,7 +38,7 @@ func (svc *SysUserSvc) GetUserList(username, nickname string, gender, status *in
 	s.Pagination(pageNo, pageSize)
 	s.Preload("Role")
 	s.Preload("Dept")
-	return dao.QueryList(model.SysUser{}, s)
+	return dao.QueryList[model.SysUser](s)
 }
 
 func (svc *SysUserSvc) GetUserById(id any) (model.SysUser, error) {
@@ -46,13 +46,13 @@ func (svc *SysUserSvc) GetUserById(id any) (model.SysUser, error) {
 	s.Where("id = ?", id)
 	s.Preload("Role")
 	s.Preload("Dept")
-	return dao.QueryOne(model.SysUser{}, s)
+	return dao.QueryOne[model.SysUser](s)
 }
 
 func (svc *SysUserSvc) AddUser(user dto.AddUserRequest) error {
 	s := dao.NewStatement()
 	s.Where("username = ?", user.Username)
-	count, err := dao.Count(model.SysUser{}, s)
+	count, err := dao.Count[model.SysUser](s)
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func (svc *SysUserSvc) EditUser(user dto.EditUserRequest) error {
 	if user.Username != u.Username {
 		s := dao.NewStatement()
 		s.Where("username = ?", user.Username)
-		count, err := dao.Count(model.SysUser{}, s)
+		count, err := dao.Count[model.SysUser](s)
 		if err != nil {
 			return err
 		}
@@ -88,7 +88,7 @@ func (svc *SysUserSvc) DelUser(currentUserId, id uint) error {
 	s := dao.NewStatement()
 	s.Where("id = ?", id)
 	s.Preload("Role")
-	user, err := dao.QueryOne(model.SysUser{}, s)
+	user, err := dao.QueryOne[model.SysUser](s)
 	if err != nil {
 		return err
 	}
@@ -106,7 +106,7 @@ func (svc *SysUserSvc) Login(username, password, captcha, captchaId string) (*mo
 	s.Where("username = ?", username)
 	s.Preload("Role")
 	s.Preload("Dept")
-	user, err := dao.QueryOne(model.SysUser{}, s)
+	user, err := dao.QueryOne[model.SysUser](s)
 	if err != nil {
 		if err == dao.NotFound {
 			return nil, exception.NewException("账号或密码错误")

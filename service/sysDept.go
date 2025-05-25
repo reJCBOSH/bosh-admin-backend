@@ -52,7 +52,7 @@ func (svc *SysDeptSvc) GetDeptList(deptName, deptCode string, pageNo, pageSize i
 	}
 	s.Pagination(pageNo, pageSize)
 	s.OrderBy("display_order DESC")
-	return dao.QueryList(model.SysDept{}, s)
+	return dao.QueryList[model.SysDept](s)
 }
 
 func (svc *SysDeptSvc) GetDeptById(id any) (model.SysDept, error) {
@@ -62,7 +62,7 @@ func (svc *SysDeptSvc) GetDeptById(id any) (model.SysDept, error) {
 func (svc *SysDeptSvc) AddDept(dept dto.AddDeptRequest) error {
 	s := dao.NewStatement()
 	s.Where("dept_code = ?", dept.DeptCode)
-	duplicateData, err := dao.Count(model.SysDept{}, s)
+	duplicateData, err := dao.Count[model.SysDept](s)
 	if err != nil {
 		return err
 	}
@@ -93,7 +93,7 @@ func (svc *SysDeptSvc) DelDept(id any) error {
 	}
 	s := dao.NewStatement()
 	s.Where("parent_id = ?", id)
-	childDeptCount, err := dao.Count(model.SysDept{}, s)
+	childDeptCount, err := dao.Count[model.SysDept](s)
 	if err != nil {
 		return err
 	}
@@ -102,7 +102,7 @@ func (svc *SysDeptSvc) DelDept(id any) error {
 	}
 	s.Init()
 	s.Where("dept_id = ?", id)
-	userCount, err := dao.Count(model.SysUser{}, s)
+	userCount, err := dao.Count[model.SysUser](s)
 	if err != nil {
 		return err
 	}

@@ -50,7 +50,7 @@ func (svc *SysMenuSvc) GetMenuList(title string, pageNo, pageSize int) ([]model.
 	}
 	s.Pagination(pageNo, pageSize)
 	s.OrderBy("display_order DESC")
-	return dao.QueryList(model.SysMenu{}, s)
+	return dao.QueryList[model.SysMenu](s)
 }
 
 func (svc *SysMenuSvc) GetMenuById(id any) (model.SysMenu, error) {
@@ -62,7 +62,7 @@ func (svc *SysMenuSvc) AddMenu(menu dto.AddMenuRequest) error {
 	if menu.MenuType < 3 {
 		s.Where("menu_type < ?", 3)
 		s.Where("name = ?", menu.Name)
-		duplicateName, err := dao.Count(model.SysMenu{}, s)
+		duplicateName, err := dao.Count[model.SysMenu](s)
 		if err != nil {
 			return err
 		}
@@ -72,7 +72,7 @@ func (svc *SysMenuSvc) AddMenu(menu dto.AddMenuRequest) error {
 	} else {
 		s.Where("parent_id = ?", menu.ParentId)
 		s.Where("auth_code = ?", menu.AuthCode)
-		duplicateAuth, err := dao.Count(model.SysMenu{}, s)
+		duplicateAuth, err := dao.Count[model.SysMenu](s)
 		if err != nil {
 			return err
 		}
@@ -92,7 +92,7 @@ func (svc *SysMenuSvc) EditMenu(menu dto.EditMenuRequest) error {
 		s := dao.NewStatement()
 		s.Where("menu_type < ?", 3)
 		s.Where("name = ?", menu.Name)
-		duplicateName, err := dao.Count(model.SysMenu{}, s)
+		duplicateName, err := dao.Count[model.SysMenu](s)
 		if err != nil {
 			return err
 		}
@@ -113,7 +113,7 @@ func (svc *SysMenuSvc) DelMenu(id any) error {
 		s := dao.NewStatement()
 		s.Where("parent_id = ?", id)
 		s.Where("menu_type != ?", 3)
-		children, err := dao.Count(model.SysMenu{}, s)
+		children, err := dao.Count[model.SysMenu](s)
 		if err != nil {
 			return err
 		}

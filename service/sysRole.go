@@ -27,7 +27,7 @@ func (svc *SysRoleSvc) GetRoleList(roleName, roleCode string, status *int, pageN
 	}
 	s.Pagination(pageNo, pageSize)
 	s.OrderBy("display_order DESC")
-	return dao.QueryList(model.SysRole{}, s)
+	return dao.QueryList[model.SysRole](s)
 }
 
 func (svc *SysRoleSvc) GetRoleById(id any) (model.SysRole, error) {
@@ -37,7 +37,7 @@ func (svc *SysRoleSvc) GetRoleById(id any) (model.SysRole, error) {
 func (svc *SysRoleSvc) AddRole(role dto.AddRoleRequest) error {
 	s := dao.NewStatement()
 	s.Where("role_code = ?", role.RoleCode)
-	duplicateCode, err := dao.Count(model.SysRole{}, s)
+	duplicateCode, err := dao.Count[model.SysRole](s)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func (svc *SysRoleSvc) DelRole(id any) error {
 	}
 	s := dao.NewStatement()
 	s.Where("role_id = ?", id)
-	bindUser, err := dao.Count(model.SysUser{}, s)
+	bindUser, err := dao.Count[model.SysUser](s)
 	if err != nil {
 		return err
 	}
@@ -98,7 +98,7 @@ func (svc *SysRoleSvc) GetRoleMenu(roleId any) ([]model.SysMenu, error) {
 		s.Where("create_by != ?", 0)
 	}
 	s.OrderBy("display_order DESC,id ASC")
-	data, _, err := dao.QueryList(model.SysMenu{}, s)
+	data, _, err := dao.QueryList[model.SysMenu](s)
 	return data, err
 }
 
@@ -108,7 +108,7 @@ func (svc *SysRoleSvc) GetRoleMenuIds(roleId any) ([]uint, error) {
 		return nil, err
 	}
 	var ids []uint
-	err = dao.GormDB().Model(&model.SysRoleMenu{}).Select("menu_id").Where("role_id = ?", role.Id).Find(&ids).Error
+	err = dao.GormDB().Model(&model.SysRoleMenu{}).Where("role_id = ?", role.Id).Pluck("menu_id", &ids).Error
 	return ids, err
 }
 
@@ -122,7 +122,7 @@ func (svc *SysRoleSvc) SetRoleMenuAuth(roleId uint, menuIds []uint) error {
 	}
 	s := dao.NewStatement()
 	s.Where("id IN ?", menuIds)
-	menuNum, err := dao.Count(model.SysMenu{}, s)
+	menuNum, err := dao.Count[model.SysMenu](s)
 	if err != nil {
 		return err
 	}
@@ -155,7 +155,7 @@ func (svc *SysRoleSvc) GetRoleDeptIds(roleId any) ([]uint, error) {
 		return nil, err
 	}
 	var ids []uint
-	err = dao.GormDB().Model(&model.SysRoleDept{}).Select("dept_id").Where("role_id = ?", role.Id).Find(&ids).Error
+	err = dao.GormDB().Model(&model.SysRoleDept{}).Where("role_id = ?", role.Id).Pluck("dept_id", &ids).Error
 	return ids, err
 }
 
@@ -171,7 +171,7 @@ func (svc *SysRoleSvc) SetRoleDataAuth(roleId uint, dataAuth int, deptIds []uint
 	if dataAuth == 5 {
 		s := dao.NewStatement()
 		s.Where("id IN ?", deptIds)
-		deptNum, err := dao.Count(model.SysDept{}, s)
+		deptNum, err := dao.Count[model.SysDept](s)
 		if err != nil {
 			return err
 		}
@@ -221,7 +221,7 @@ func (svc *SysRoleSvc) SetRoleStatus(currentRoleId, roleId uint, status int) err
 		// 判断是否分配菜单权限
 		s := dao.NewStatement()
 		s.Where("role_id = ?", role.Id)
-		menuNum, err := dao.Count(model.SysRoleMenu{}, s)
+		menuNum, err := dao.Count[model.SysRoleMenu](s)
 		if err != nil {
 			return err
 		}

@@ -136,7 +136,7 @@ func (svc *JWTSvc) TokenValidate(token, subject, audience string) (*CustomClaims
 	// 判断token是否禁用
 	s := dao.NewStatement()
 	s.Where("black_jwt = ?", token)
-	count, err := dao.Count(model.SysBlackJwt{}, s)
+	count, err := dao.Count[model.SysBlackJwt](s)
 	if err != nil {
 		return nil, err
 	}
