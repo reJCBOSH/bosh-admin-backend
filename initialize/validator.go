@@ -7,15 +7,30 @@ import (
 
 	"bosh-admin/global"
 
+	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	zhTranslations "github.com/go-playground/validator/v10/translations/zh"
 )
 
+type defaultValidator struct {
+	engine *validator.Validate
+}
+
+func (v *defaultValidator) ValidateStruct(obj interface{}) error {
+	return v.engine.Struct(obj)
+}
+
+func (v *defaultValidator) Engine() interface{} {
+	return v.engine
+}
+
 // InitValidator 初始化校验器
 func InitValidator() {
+	// 使用Validator引擎
 	validate := validator.New()
+	binding.Validator = &defaultValidator{engine: validate}
 	// 注册获取 json tag 的函数
 	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
 		name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]

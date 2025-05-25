@@ -12,8 +12,8 @@ type IdsRequest struct {
 
 // Pagination 分页
 type Pagination struct {
-	PageNo   int `json:"pageNo" form:"pageNo" validate:"required,min=-1,ne=0"`                  // 页码
-	PageSize int `json:"pageSize" form:"pageSize" validate:"required_unless=PageNo -1,max=100"` // 每页数量
+	PageNo   int `json:"pageNo" form:"pageNo" validate:"required,min=-1,ne=0"`                       // 页码
+	PageSize int `json:"pageSize" form:"pageSize" validate:"required_unless=PageNo -1,gt=0,max=100"` // 每页数量
 }
 
 // OrderBy 排序
