@@ -52,7 +52,7 @@ func Expr(query string, args ...interface{}) clause.Expr {
 	return gorm.Expr(query, args...)
 }
 
-func QueryList[T Basic](model T, s *Statement) (data []T, total int64, err error) {
+func QueryList[T any](model T, s *Statement) (data []T, total int64, err error) {
 	DB := s.Format().Model(&model)
 	if s.tableName != "" {
 		DB = DB.Table(s.tableName)
@@ -78,7 +78,7 @@ func QueryList[T Basic](model T, s *Statement) (data []T, total int64, err error
 	return
 }
 
-func QueryOne[T Basic](model T, s *Statement) (data T, err error) {
+func QueryOne[T any](model T, s *Statement) (data T, err error) {
 	DB := s.Format().Model(&model)
 	if s.tableName != "" {
 		DB = DB.Table(s.tableName)
@@ -112,13 +112,13 @@ func DelById[T any](id any) error {
 }
 
 // Count 统计数量
-func Count[T Basic](model T, s *Statement) (num int64, err error) {
+func Count[T any](model T, s *Statement) (num int64, err error) {
 	err = s.Format().Model(&model).Count(&num).Error
 	return
 }
 
 // Sum 求和
-func Sum[T Basic](model T, s *Statement) (num float64, err error) {
+func Sum[T any](model T, s *Statement) (num float64, err error) {
 	fields := s.fields.Keys()
 	if len(fields) == 0 || fields[0] == "" {
 		err = errors.New("求和字段错误")

@@ -12,8 +12,3 @@ type SysRole struct {
 	DefaultRouter string `json:"default_router" json:"defaultRouter" ` // 默认路由
 	DataAuth      int    `gorm:"data_auth" json:"dataAuth" `           // 数据权限 0未配置 1全部数据 2本部门数据 3本部门及以下数据 4本人数据 5自定义数据
 }
-
-// TableName sys_role
-func (SysRole) TableName() string {
-	return "sys_role"
-}

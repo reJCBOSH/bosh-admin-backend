@@ -29,8 +29,3 @@ type SysMenu struct {
 	FixedTag        bool      `gorm:"fixed_tag" json:"fixedTag"`               // 固定标签页
 	Children        []SysMenu `gorm:"-" json:"children"`                       // 子菜单
 }
-
-// TableName sys_menu
-func (SysMenu) TableName() string {
-	return "sys_menu"
-}

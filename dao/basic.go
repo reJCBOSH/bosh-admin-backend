@@ -2,11 +2,6 @@ package dao
 
 import "gorm.io/gorm"
 
-// Basic 基础接口
-type Basic interface {
-	TableName() string
-}
-
 // BasicModel 基础模型
 type BasicModel struct {
 	Id        uint           `gorm:"primaryKey" json:"id"`        // Id

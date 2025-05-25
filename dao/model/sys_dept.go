@@ -14,8 +14,3 @@ type SysDept struct {
 	DisplayOrder int       `gorm:"display_order" json:"displayOrder"` // 显示顺序
 	Children     []SysDept `gorm:"-" json:"children"`
 }
-
-// TableName sys_dept
-func (SysDept) TableName() string {
-	return "sys_dept"
-}

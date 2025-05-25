@@ -23,8 +23,3 @@ type SysUser struct {
 	Role          SysRole        `gorm:"foreignKey:RoleId;references:Id" json:"role"` // 角色
 	Dept          SysDept        `gorm:"foreignKey:DeptId;references:Id" json:"dept"` // 部门
 }
-
-// TableName sys_user
-func (SysUser) TableName() string {
-	return "sys_user"
-}
