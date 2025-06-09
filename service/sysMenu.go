@@ -173,7 +173,7 @@ func getAsyncRoutesChildrenList(menu *dto.PureMenu, treeMap map[uint][]dto.PureM
 // GetAsyncRoutes 获取pure admin菜单
 func (svc *SysMenuSvc) GetAsyncRoutes(roleId uint, roleCode string) ([]dto.PureMenu, error) {
 	var roleMenuIds []uint
-	if roleCode == "superAdmin" {
+	if roleCode != "superAdmin" {
 		err := dao.GormDB().Model(&model.SysRoleMenu{}).Where("role_id = ?", roleId).Pluck("menu_id", &roleMenuIds).Error
 		if err != nil {
 			return nil, err
@@ -194,7 +194,7 @@ func (svc *SysMenuSvc) GetAsyncRoutes(roleId uint, roleCode string) ([]dto.PureM
 	}
 	var menus []model.SysMenu
 	DB = dao.GormDB()
-	if roleCode == "superAdmin" {
+	if roleCode != "superAdmin" {
 		DB = DB.Where("id IN ?", roleMenuIds)
 	}
 	err = DB.Where("menu_type != ?", 3).Order("display_order DESC").Find(&menus).Error
@@ -203,7 +203,7 @@ func (svc *SysMenuSvc) GetAsyncRoutes(roleId uint, roleCode string) ([]dto.PureM
 	}
 	menuMap := make(map[uint][]dto.PureMenu)
 	for _, menu := range menus {
-		pureMneu := dto.PureMenu{
+		pureMenu := dto.PureMenu{
 			Id:        menu.Id,
 			ParentId:  menu.ParentId,
 			Path:      menu.Path,
@@ -234,9 +234,9 @@ func (svc *SysMenuSvc) GetAsyncRoutes(roleId uint, roleCode string) ([]dto.PureM
 			for _, btn := range btnArr {
 				auths = append(auths, btn.AuthCode)
 			}
-			pureMneu.Meta.Auths = auths
+			pureMenu.Meta.Auths = auths
 		}
-		menuMap[menu.ParentId] = append(menuMap[menu.ParentId], pureMneu)
+		menuMap[menu.ParentId] = append(menuMap[menu.ParentId], pureMenu)
 	}
 	routers := menuMap[0]
 	for i := 0; i < len(routers); i++ {
