@@ -4,22 +4,22 @@ import "bosh-admin/dao"
 
 // SysUser 系统用户
 type SysUser struct {
-	dao.BasicModel
-	Username      string         `gorm:"username" json:"username"`                    // 账号
-	Password      string         `gorm:"password" json:"-"`                           // 密码
-	PwdUpdatedAt  dao.CustomTime `gorm:"pwd_updated_at" json:"pwdUpdatedAt"`          // 密码修改时间
-	PwdRemainTime int            `gorm:"pwd_remain_time" json:"-"`                    // 剩余尝试次数
-	Avatar        string         `gorm:"avatar" json:"avatar"`                        // 头像
-	Nickname      string         `gorm:"nickname" json:"nickname"`                    // 昵称
-	Gender        int            `gorm:"gender" json:"gender" form:"gender"`          // 性别 0未知 1男 2女
-	Birthday      dao.CustomDate `gorm:"birthday" json:"birthday"`                    // 生日
-	Email         string         `gorm:"email" json:"email"`                          // 邮箱
-	Mobile        string         `gorm:"mobile" json:"mobile"`                        // 联系方式
-	Introduce     string         `gorm:"introduce" json:"introduce"`                  // 个人简介
-	Status        int            `gorm:"status" json:"status"`                        // 状态 0冻结 1正常
-	RoleId        uint           `gorm:"role_id" json:"roleId"`                       // 角色id
-	DeptId        uint           `gorm:"dept_id" json:"deptId"`                       // 部门id
-	Remark        string         `gorm:"remark" json:"remark"`                        // 备注
-	Role          SysRole        `gorm:"foreignKey:RoleId;references:Id" json:"role"` // 角色
-	Dept          SysDept        `gorm:"foreignKey:DeptId;references:Id" json:"dept"` // 部门
+    dao.BasicModel
+    Username      string         `gorm:"type:varchar(100);not null;unique;comment:用户名" json:"username"`
+    Password      string         `gorm:"not null;comment:密码" json:"-"`
+    PwdUpdatedAt  dao.CustomTime `gorm:"comment:密码修改时间" json:"pwdUpdatedAt"`
+    PwdRemainTime int            `gorm:"type:tinyint;default:5;comment:剩余尝试次数" json:"-"`
+    Avatar        string         `gorm:"comment:头像" json:"avatar"`
+    Nickname      string         `gorm:"type:varchar(100);not null;comment:昵称" json:"nickname"`
+    Gender        int            `gorm:"type:tinyint;default:0;comment:性别 0未知 1男 2女" json:"gender"`
+    Birthday      dao.CustomDate `gorm:"type:date;comment:生日" json:"birthday"`
+    Email         string         `gorm:"comment:邮箱" json:"email"`
+    Mobile        string         `gorm:"type:varchar(20);comment:联系方式" json:"mobile"`
+    Introduce     string         `gorm:"type:varchar(200);comment:个人简介" json:"introduce"`
+    Status        int            `gorm:"type:tinyint(1);default:0;comment:状态 0冻结 1正常" json:"status"`
+    RoleId        uint           `gorm:"comment:角色id" json:"roleId"`
+    DeptId        uint           `gorm:"comment:部门id" json:"deptId"`
+    Remark        string         `gorm:"comment:备注" json:"remark"`
+    Role          SysRole        `gorm:"foreignKey:RoleId;references:Id" json:"role"`
+    Dept          SysDept        `gorm:"foreignKey:DeptId;references:Id" json:"dept"`
 }
