@@ -4,11 +4,11 @@ import "bosh-admin/dao"
 
 // SysRole 角色
 type SysRole struct {
-	dao.BasicModel
-	RoleName      string `gorm:"role_name" json:"roleName" `           // 角色名称
-	RoleCode      string `gorm:"role_code" json:"roleCode" `           // 角色编码
-	Status        int    `gorm:"status" json:"status" `                // 状态 0冻结 1正常
-	Remark        string `gorm:"remark" json:"remark" `                // 备注
-	DefaultRouter string `json:"default_router" json:"defaultRouter" ` // 默认路由
-	DataAuth      int    `gorm:"data_auth" json:"dataAuth" `           // 数据权限 0未配置 1全部数据 2本部门数据 3本部门及以下数据 4本人数据 5自定义数据
+    dao.BasicModel
+    RoleName      string `gorm:"type:varchar(30);not null;comment:角色名称" json:"roleName" `
+    RoleCode      string `gorm:"type:varchar(30);not null;unique;comment:角色编码" json:"roleCode" `
+    Status        int    `gorm:"type:tinyint(1);default:0;comment:状态 0冻结 1正常" json:"status" `
+    Remark        string `gorm:"comment:备注" json:"remark" `
+    DefaultRouter string `json:"comment:默认路由" json:"defaultRouter" `
+    DataAuth      int    `gorm:"type:tinyint;default:0;comment:数据权限 0未配置 1全部数据 2本部门数据 3本部门及以下数据 4本人数据 5自定义数据" json:"dataAuth" `
 }
