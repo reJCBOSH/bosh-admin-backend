@@ -1,14 +1,16 @@
 package db
 
 import (
+    "time"
+
     "bosh-admin/core/log"
     "bosh-admin/dao"
     "bosh-admin/dao/model"
     "bosh-admin/global"
     "bosh-admin/utils"
+
     "github.com/go-gormigrate/gormigrate/v2"
     "gorm.io/gorm"
-    "time"
 )
 
 // MigrateDatabase 数据库迁移
@@ -40,7 +42,7 @@ func initSchema() error {
         }
         dept := model.SysDept{
             DeptName:     "系统管理",
-            DeptCode:     "SystemAdmin",
+            DeptCode:     global.SystemAdmin,
             Remark:       "系统管理",
             Status:       1,
             DisplayOrder: 9999,
@@ -52,7 +54,7 @@ func initSchema() error {
         }
         role := model.SysRole{
             RoleName: "超级管理员",
-            RoleCode: "SuperAdmin",
+            RoleCode: global.SuperAdmin,
             Status:   1,
             Remark:   "超级管理员",
             DataAuth: 1,
@@ -64,7 +66,7 @@ func initSchema() error {
         }
         defaultPwd, _ := utils.BcryptHash("Ab112112.")
         user := model.SysUser{
-            Username:     "SuperAdmin",
+            Username:     global.SuperAdmin,
             Password:     defaultPwd,
             PwdUpdatedAt: dao.CustomTime(time.Now()),
             Nickname:     "超级管理员",

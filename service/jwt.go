@@ -215,7 +215,7 @@ func (svc *JWTSvc) UserLogin(user *model.SysUser) (string, string, int64, error)
     }
     claims.ID = uuid
     var audience []string
-    if user.Role.RoleCode == "superAdmin" && user.Dept.DeptCode == "systemAdmin" {
+    if user.Role.RoleCode == global.SuperAdmin && user.Dept.DeptCode == global.SystemAdmin {
         audience = []string{JwtAudienceAll}
     } else {
         audience = []string{JwtAudienceApi, JwtAudienceStatic}

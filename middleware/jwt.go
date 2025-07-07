@@ -1,6 +1,8 @@
 package middleware
 
 import (
+    "errors"
+
     "bosh-admin/core/ctx"
     "bosh-admin/core/log"
     "bosh-admin/dao"
@@ -30,7 +32,7 @@ func JWTApiAuth() gin.HandlerFunc {
         sysUserSvc := service.NewSysUserSvc()
         user, err := sysUserSvc.GetUserById(claims.User.UserId)
         if err != nil {
-            if err == dao.NotFound {
+            if errors.Is(err, dao.NotFound) {
                 c.UnAuthorized("账号不存在")
             } else {
                 log.Error(err)
