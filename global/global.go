@@ -25,6 +25,7 @@ var (
 )
 
 const (
-    SuperAdmin  = "SuperAdmin"
-    SystemAdmin = "SystemAdmin"
+    SuperAdmin      = "SuperAdmin"
+    SystemAdmin     = "SystemAdmin"
+    DefaultPassword = "Ab112112."
 )

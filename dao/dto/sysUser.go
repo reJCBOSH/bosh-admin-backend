@@ -41,11 +41,11 @@ type GetUserListRequest struct {
 }
 
 type GetUserListResponse struct {
-    List  []GetUserListItem `json:"list"`  // 用户列表
-    Total int64             `json:"total"` // 总数
+    List  []UserListItem `json:"list"`  // 用户列表
+    Total int64          `json:"total"` // 总数
 }
 
-type GetUserListItem struct {
+type UserListItem struct {
     Id       uint   `json:"id"`
     Username string `json:"username"`
     Avatar   string `json:"avatar"`
@@ -80,4 +80,38 @@ type EditUserRequest struct {
     RoleId   uint   `json:"roleId" validate:"required,gt=0"`
     DeptId   uint   `json:"deptId" validate:"required,gt=0"`
     Remark   string `json:"remark"`
+}
+
+type SetUserStatusRequest struct {
+    Id     uint `json:"id" validate:"required,gt=0"`
+    Status int  `json:"status" validate:"oneof=0 1"`
+}
+
+type SelfInfo struct {
+    Id        uint   `json:"id"`
+    Username  string `json:"username"`
+    Avatar    string `json:"avatar"`
+    Nickname  string `json:"nickname"`
+    Gender    int    `json:"gender"`
+    Birthday  string `json:"birthday"`
+    Email     string `json:"email"`
+    Mobile    string `json:"mobile"`
+    Introduce string `json:"introduce"`
+}
+
+type EditSelfInfoRequest struct {
+    dao.EditBasicModel
+    Avatar    string `json:"avatar"`
+    Nickname  string `json:"nickname" validate:"required"`
+    Gender    int    `json:"gender" validate:"oneof=0 1 2"`
+    Birthday  string `json:"birthday"`
+    Email     string `json:"email"`
+    Mobile    string `json:"mobile"`
+    Introduce string `json:"introduce"`
+}
+
+type EditSelfPasswordRequest struct {
+    OldPassword string `json:"oldPassword" validate:"required"`
+    NewPassword string `json:"newPassword" validate:"required"`
+    RePassword  string `json:"rePassword" validate:"required,eqfield=Password"`
 }

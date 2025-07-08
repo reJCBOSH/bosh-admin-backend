@@ -64,7 +64,7 @@ func initSchema() error {
             log.Error("初始化角色数据表失败", err)
             return err
         }
-        defaultPwd, _ := utils.BcryptHash("Ab112112.")
+        defaultPwd, _ := utils.BcryptHash(global.DefaultPassword)
         user := model.SysUser{
             Username:     global.SuperAdmin,
             Password:     defaultPwd,

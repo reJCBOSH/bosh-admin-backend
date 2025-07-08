@@ -4,6 +4,7 @@ import (
     "bosh-admin/global"
     "errors"
     "fmt"
+    "time"
 
     "bosh-admin/core/exception"
     "bosh-admin/dao"
@@ -143,4 +144,65 @@ func (svc *SysUserSvc) Login(username, password, captcha, captchaId string) (*mo
     // TODO 增加登录记录
     tx.Commit()
     return &user, nil
+}
+
+func (svc *SysUserSvc) ResetPassword(currentUserId, id uint) error {
+    if currentUserId == id {
+        return exception.NewException("无法重置自身密码")
+    }
+    user, err := svc.GetUserById(id)
+    if err != nil {
+        return err
+    }
+    if user.Role.RoleCode == global.SuperAdmin {
+        return exception.NewException("无法重置超级管理员密码")
+    }
+    user.Password, err = utils.BcryptHash(global.DefaultPassword)
+    if err != nil {
+        return err
+    }
+    user.PwdRemainTime = 5
+    user.PwdUpdatedAt = dao.CustomTime(time.Now().Local())
+    return dao.Updates(user).Error
+}
+
+func (svc *SysUserSvc) SetUserStatus(currentUserId, id uint, status int) error {
+    if currentUserId == id {
+        return exception.NewException("无法修改自身状态")
+    }
+    user, err := svc.GetUserById(id)
+    if err != nil {
+        return err
+    }
+    if user.Role.RoleCode == global.SuperAdmin {
+        return exception.NewException("无法修改超级管理员状态")
+    }
+    if status == user.Status {
+        return exception.NewException("用户状态未改变")
+    }
+    return dao.GormDB().Model(model.SysUser{}).Where("id = ?", id).UpdateColumn("status", status).Error
+}
+
+func (svc *SysUserSvc) EditSelfInfo(currentUserId uint, info dto.EditSelfInfoRequest) error {
+    if currentUserId != info.Id {
+        return exception.NewException("无法修改其他用户信息")
+    }
+    return dao.Updates(info, "sys_user").Error
+}
+
+func (svc *SysUserSvc) EditSelfPassword(currentUserId uint, info dto.EditSelfPasswordRequest) error {
+    user, err := dao.QueryById[model.SysUser](currentUserId)
+    if err != nil {
+        return err
+    }
+    if ok := utils.BcryptCheck(info.OldPassword, user.Password); !ok {
+        return exception.NewException("旧密码错误")
+    }
+    user.Password, err = utils.BcryptHash(info.NewPassword)
+    if err != nil {
+        return err
+    }
+    user.PwdRemainTime = 5
+    user.PwdUpdatedAt = dao.CustomTime(time.Now().Local())
+    return dao.Updates(user).Error
 }
