@@ -101,7 +101,7 @@ func (svc *SysMenuSvc) EditMenu(menu dto.EditMenuRequest) error {
             return exception.NewException("路由名称已存在，必须保持唯一")
         }
     }
-    return dao.Save(&menu, "sys_menu").Error
+    return dao.Updates(&menu, "sys_menu").Error
 }
 
 func (svc *SysMenuSvc) DelMenu(id any) error {

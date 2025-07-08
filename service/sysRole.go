@@ -49,7 +49,7 @@ func (svc *SysRoleSvc) AddRole(role dto.AddRoleRequest) error {
 }
 
 func (svc *SysRoleSvc) EditRole(role dto.EditRoleRequest) error {
-    return dao.Save(&role, "sys_role").Error
+    return dao.Updates(&role, "sys_role").Error
 }
 
 func (svc *SysRoleSvc) DelRole(id any) error {
@@ -240,5 +240,5 @@ func (svc *SysRoleSvc) SetRoleStatus(currentRoleId, roleId uint, status int) err
         }
     }
     role.Status = status
-    return dao.Save(role).Error
+    return dao.Updates(&role).Error
 }

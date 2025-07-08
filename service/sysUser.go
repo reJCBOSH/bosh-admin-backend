@@ -81,7 +81,7 @@ func (svc *SysUserSvc) EditUser(user dto.EditUserRequest) error {
             return exception.NewException("用户名已存在")
         }
     }
-    return dao.Save(user, "sys_user").Error
+    return dao.Updates(user, "sys_user").Error
 }
 
 func (svc *SysUserSvc) DelUser(currentUserId, id uint) error {
@@ -123,7 +123,7 @@ func (svc *SysUserSvc) Login(username, password, captcha, captchaId string) (*mo
         if user.PwdRemainTime == 1 {
             user.PwdRemainTime = 0
             user.Status = 0
-            if err = dao.Save(user).Error; err != nil {
+            if err = dao.Updates(user).Error; err != nil {
                 return nil, err
             }
             return nil, exception.NewException("账号已被冻结, 请联系管理员")
