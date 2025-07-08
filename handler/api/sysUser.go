@@ -2,17 +2,19 @@ package api
 
 import (
     "bosh-admin/core/ctx"
+    "bosh-admin/core/log"
     "bosh-admin/dao/dto"
     "bosh-admin/service"
 )
 
 type SysUser struct {
-    svc    *service.SysUserSvc
-    jwtSvc *service.JWTSvc
+    svc            *service.SysUserSvc
+    jwtSvc         *service.JWTSvc
+    loginRecordSvc *service.SysLoginRecordSvc
 }
 
 func NewSysUserHandler() *SysUser {
-    return &SysUser{svc: service.NewSysUserSvc(), jwtSvc: service.NewJWTSvc()}
+    return &SysUser{svc: service.NewSysUserSvc(), jwtSvc: service.NewJWTSvc(), loginRecordSvc: service.NewSysLoginRecordSvc()}
 }
 
 func (h *SysUser) Login(c *ctx.Context) {
@@ -21,13 +23,24 @@ func (h *SysUser) Login(c *ctx.Context) {
     if c.HandlerError(err, msg) {
         return
     }
+    loginIP := c.ClientIP()
+    userAgent := c.Request.UserAgent()
     user, err := h.svc.Login(req.Username, req.Password, req.Captcha, req.CaptchaId)
     if c.HandlerError(err) {
+        if err = h.loginRecordSvc.AddLoginRecord(user.Id, req.Username, loginIP, userAgent, 0); err != nil {
+            log.Error("添加登录记录失败:", err.Error())
+        }
         return
     }
     accessToken, refreshToken, expires, err := h.jwtSvc.UserLogin(user)
     if c.HandlerError(err) {
+        if err = h.loginRecordSvc.AddLoginRecord(user.Id, req.Username, loginIP, userAgent, 0); err != nil {
+            log.Error("添加登录记录失败:", err.Error())
+        }
         return
+    }
+    if err = h.loginRecordSvc.AddLoginRecord(user.Id, req.Username, loginIP, userAgent, 1); err != nil {
+        log.Error("添加登录记录失败:", err.Error())
     }
     c.SuccessWithData(dto.LoginResponse{
         Avatar:       user.Avatar,

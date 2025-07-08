@@ -134,15 +134,11 @@ func (svc *SysUserSvc) Login(username, password, captcha, captchaId string) (*mo
         }
         return nil, exception.NewException(fmt.Sprintf("密码错误，剩余%d次尝试机会，超出则冻结账号", user.PwdRemainTime-1))
     }
-    tx := dao.Begin()
     if user.PwdRemainTime < 5 {
-        if err = tx.Model(model.SysUser{}).Where("id = ?", user.Id).UpdateColumn("pwd_remain_time", 5).Error; err != nil {
-            tx.Rollback()
+        if err = dao.GormDB().Model(model.SysUser{}).Where("id = ?", user.Id).UpdateColumn("pwd_remain_time", 5).Error; err != nil {
             return nil, err
         }
     }
-    // TODO 增加登录记录
-    tx.Commit()
     return &user, nil
 }
 
