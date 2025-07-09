@@ -70,7 +70,7 @@ func (svc *SysDeptSvc) AddDept(dept dto.AddDeptRequest) error {
     if duplicateData > 0 {
         return exception.NewException("部门标识已存在")
     }
-    return dao.Create(&dept, "sys_dept").Error
+    return dao.Create(&dept, "sys_dept")
 }
 
 func (svc *SysDeptSvc) EditDept(dept dto.EditDeptRequest) error {
@@ -81,7 +81,7 @@ func (svc *SysDeptSvc) EditDept(dept dto.EditDeptRequest) error {
     if d.DeptCode == global.SystemAdmin {
         return exception.NewException("系统内置部门，不允许修改")
     }
-    return dao.Updates(&dept, "sys_dept").Error
+    return dao.Updates(&dept, "sys_dept")
 }
 
 func (svc *SysDeptSvc) DelDept(id any) error {

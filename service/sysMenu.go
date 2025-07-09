@@ -81,7 +81,7 @@ func (svc *SysMenuSvc) AddMenu(menu dto.AddMenuRequest) error {
             return exception.NewException("权限标识已存在")
         }
     }
-    return dao.Create(&menu, "sys_menu").Error
+    return dao.Create(&menu, "sys_menu")
 }
 
 func (svc *SysMenuSvc) EditMenu(menu dto.EditMenuRequest) error {
@@ -101,7 +101,7 @@ func (svc *SysMenuSvc) EditMenu(menu dto.EditMenuRequest) error {
             return exception.NewException("路由名称已存在，必须保持唯一")
         }
     }
-    return dao.Updates(&menu, "sys_menu").Error
+    return dao.Updates(&menu, "sys_menu")
 }
 
 func (svc *SysMenuSvc) DelMenu(id any) error {

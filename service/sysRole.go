@@ -45,11 +45,11 @@ func (svc *SysRoleSvc) AddRole(role dto.AddRoleRequest) error {
     if duplicateCode > 0 {
         return exception.NewException("角色标识已存在")
     }
-    return dao.Create(&role, "sys_role").Error
+    return dao.Create(&role, "sys_role")
 }
 
 func (svc *SysRoleSvc) EditRole(role dto.EditRoleRequest) error {
-    return dao.Updates(&role, "sys_role").Error
+    return dao.Updates(&role, "sys_role")
 }
 
 func (svc *SysRoleSvc) DelRole(id any) error {
@@ -240,5 +240,5 @@ func (svc *SysRoleSvc) SetRoleStatus(currentRoleId, roleId uint, status int) err
         }
     }
     role.Status = status
-    return dao.Updates(&role).Error
+    return dao.Updates(&role)
 }

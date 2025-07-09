@@ -27,7 +27,7 @@ func (svc *SysLoginRecordSvc) AddLoginRecord(uid uint, username, loginIP, userAg
     UA := ua.New(userAgent)
     record.LoginOS = UA.OS()
     record.LoginBrowser, _ = UA.Browser()
-    return dao.Create(&record).Error
+    return dao.Create(&record)
 }
 
 func (svc *SysLoginRecordSvc) GetLoginRecordList(username, startDate, endDate string, pageNo, pageSize int) ([]model.SysLoginRecord, int64, error) {

@@ -18,13 +18,13 @@ func GormDB() *gorm.DB {
 }
 
 // Query 原生sql查询
-func Query(sql string, values ...interface{}) *gorm.DB {
-    return GormDB().Raw(sql, values...)
+func Query(sql string, values ...interface{}) error {
+    return GormDB().Raw(sql, values...).Error
 }
 
 // Exec 原生sql执行
-func Exec(sql string, values ...interface{}) *gorm.DB {
-    return GormDB().Exec(sql, values...)
+func Exec(sql string, values ...interface{}) error {
+    return GormDB().Exec(sql, values...).Error
 }
 
 // Begin 开启事务
@@ -32,28 +32,28 @@ func Begin() *gorm.DB {
     return GormDB().Begin()
 }
 
-func Create(value interface{}, table ...string) *gorm.DB {
+func Create(value interface{}, table ...string) error {
     DB := GormDB()
     if len(table) > 0 {
         DB = DB.Table(table[0])
     }
-    return DB.Create(value)
+    return DB.Create(value).Error
 }
 
-func Save(value interface{}, table ...string) *gorm.DB {
+func Save(value interface{}, table ...string) error {
     DB := GormDB()
     if len(table) > 0 {
         DB = DB.Table(table[0])
     }
-    return DB.Save(value)
+    return DB.Save(value).Error
 }
 
-func Updates(value interface{}, table ...string) *gorm.DB {
+func Updates(value interface{}, table ...string) error {
     DB := GormDB()
     if len(table) > 0 {
         DB = DB.Table(table[0])
     }
-    return DB.Select("*").Updates(value)
+    return DB.Select("*").Updates(value).Error
 }
 
 func Expr(query string, args ...interface{}) clause.Expr {

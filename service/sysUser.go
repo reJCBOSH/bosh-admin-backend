@@ -63,7 +63,7 @@ func (svc *SysUserSvc) AddUser(user dto.AddUserRequest) error {
     if count > 0 {
         return exception.NewException("用户名已存在")
     }
-    return dao.Create(user, "sys_user").Error
+    return dao.Create(user, "sys_user")
 }
 
 func (svc *SysUserSvc) EditUser(user dto.EditUserRequest) error {
@@ -82,7 +82,7 @@ func (svc *SysUserSvc) EditUser(user dto.EditUserRequest) error {
             return exception.NewException("用户名已存在")
         }
     }
-    return dao.Updates(user, "sys_user").Error
+    return dao.Updates(user, "sys_user")
 }
 
 func (svc *SysUserSvc) DelUser(currentUserId, id uint) error {
@@ -124,7 +124,7 @@ func (svc *SysUserSvc) Login(username, password, captcha, captchaId string) (*mo
         if user.PwdRemainTime == 1 {
             user.PwdRemainTime = 0
             user.Status = 0
-            if err = dao.Updates(user).Error; err != nil {
+            if err = dao.Updates(user); err != nil {
                 return nil, err
             }
             return nil, exception.NewException("账号已被冻结, 请联系管理员")
@@ -159,7 +159,7 @@ func (svc *SysUserSvc) ResetPassword(currentUserId, id uint) error {
     }
     user.PwdRemainTime = 5
     user.PwdUpdatedAt = dao.CustomTime(time.Now().Local())
-    return dao.Updates(user).Error
+    return dao.Updates(user)
 }
 
 func (svc *SysUserSvc) SetUserStatus(currentUserId, id uint, status int) error {
@@ -183,7 +183,7 @@ func (svc *SysUserSvc) EditSelfInfo(currentUserId uint, info dto.EditSelfInfoReq
     if currentUserId != info.Id {
         return exception.NewException("无法修改其他用户信息")
     }
-    return dao.Updates(info, "sys_user").Error
+    return dao.Updates(info, "sys_user")
 }
 
 func (svc *SysUserSvc) EditSelfPassword(currentUserId uint, info dto.EditSelfPasswordRequest) error {
@@ -200,5 +200,5 @@ func (svc *SysUserSvc) EditSelfPassword(currentUserId uint, info dto.EditSelfPas
     }
     user.PwdRemainTime = 5
     user.PwdUpdatedAt = dao.CustomTime(time.Now().Local())
-    return dao.Updates(user).Error
+    return dao.Updates(user)
 }
