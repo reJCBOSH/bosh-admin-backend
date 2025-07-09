@@ -1,4 +1,4 @@
-package db
+package migrations
 
 import (
     "time"
@@ -13,21 +13,10 @@ import (
     "gorm.io/gorm"
 )
 
-// MigrateDatabase 数据库迁移
-func MigrateDatabase() error {
-    err := initSchema()
-    if err != nil {
-        return err
-    }
-    return nil
-}
-
-// 初始化数据库表结构
-func initSchema() error {
-    m := gormigrate.New(global.GormDB, gormigrate.DefaultOptions, nil)
-
-    m.InitSchema(func(tx *gorm.DB) error {
-        err := tx.AutoMigrate(
+var InitSchema = &gormigrate.Migration{
+    ID: "202507090943_init_schema",
+    Migrate: func(tx *gorm.DB) error {
+        err := tx.Migrator().AutoMigrate(
             &model.SysBlackJwt{},
             &model.SysDept{},
             &model.SysMenu{},
@@ -82,14 +71,16 @@ func initSchema() error {
             return err
         }
         return nil
-    })
-
-    return m.Migrate()
-}
-
-// 迁移数据表结构
-func migrations() error {
-    m := gormigrate.New(global.GormDB, gormigrate.DefaultOptions, nil)
-
-    return m.Migrate()
+    },
+    Rollback: func(tx *gorm.DB) error {
+        return tx.Migrator().DropTable(
+            &model.SysBlackJwt{},
+            &model.SysDept{},
+            &model.SysMenu{},
+            &model.SysRole{},
+            &model.SysRoleDept{},
+            &model.SysRoleMenu{},
+            &model.SysUser{},
+        )
+    },
 }
