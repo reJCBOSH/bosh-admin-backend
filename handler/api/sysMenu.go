@@ -7,12 +7,14 @@ import (
 )
 
 type SysMenuHandler struct {
-	svc *service.SysMenuSvc
+	svc    *service.SysMenuSvc
+	jwtSvc *service.JWTSvc
 }
 
 func NewSysMenuHandler() *SysMenuHandler {
 	return &SysMenuHandler{
-		svc: service.NewSysMenuSvc(),
+		svc:    service.NewSysMenuSvc(),
+		jwtSvc: service.NewJWTSvc(),
 	}
 }
 
@@ -150,5 +152,14 @@ func (h *SysMenuHandler) DelMenu(c *ctx.Context) {
 }
 
 func (h *SysMenuHandler) GetAsyncRoutes(c *ctx.Context) {
-
+	userClaims := h.jwtSvc.GetUserClaims(c)
+	if userClaims == nil {
+		c.UnAuthorized("用户信息失效")
+		return
+	}
+	data, err := h.svc.GetAsyncRoutes(userClaims.RoleId, userClaims.RoleCode)
+	if c.HandlerError(err) {
+		return
+	}
+	c.SuccessWithData(data)
 }

@@ -4,13 +4,13 @@ import "bosh-admin/dao"
 
 // SysDept 部门
 type SysDept struct {
-	dao.BasicModel
-	ParentId     uint      `gorm:"parent_id" json:"parentId"`         // 父级id
-	DeptName     string    `gorm:"dept_name" json:"deptName"`         // 部门名称
-	DeptCode     string    `gorm:"dept_code" json:"deptCode"`         // 部门标识
-	DeptPath     string    `gorm:"dept_path" json:"deptPath"`         // 部门路径
-	Remark       string    `gorm:"remark" json:"remark"`              // 备注
-	Status       int       `gorm:"status" json:"status"`              // 状态 0停用 1启用
-	DisplayOrder int       `gorm:"display_order" json:"displayOrder"` // 显示顺序
-	Children     []SysDept `gorm:"-" json:"children"`
+    dao.BasicModel
+    ParentId     uint      `gorm:"default:0;comment:父id" json:"parentId"`
+    DeptName     string    `gorm:"type:varchar(30);not null;comment:部门名称" json:"deptName"`
+    DeptCode     string    `gorm:"type:varchar(30);not null;unique;comment:部门编码" json:"deptCode"`
+    DeptPath     string    `gorm:"default:0;comment:部门路径" json:"deptPath"`
+    Remark       string    `gorm:"comment:备注" json:"remark"`
+    Status       int       `gorm:"type:tinyint(1);default:0;comment:状态 0停用 1启用" json:"status"`
+    DisplayOrder int       `gorm:"type:int unsigned;default:0;comment:显示顺序" json:"displayOrder"`
+    Children     []SysDept `gorm:"-" json:"children"`
 }

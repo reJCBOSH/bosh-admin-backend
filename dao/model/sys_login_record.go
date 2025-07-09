@@ -1,0 +1,17 @@
+package model
+
+import "bosh-admin/dao"
+
+type SysLoginRecord struct {
+    dao.BasicModel
+    Uid           uint           `gorm:"comment:用户id" json:"uid"`
+    Username      string         `gorm:"type:varchar(100);comment:用户名" json:"username"`
+    LoginIP       string         `gorm:"column:login_ip;type:varchar(20);comment:登录ip" json:"loginIP"`
+    LoginLocation string         `gorm:"comment:登录地点" json:"loginLocation"`
+    UserAgent     string         `gorm:"type:text;comment:用户代理" json:"userAgent"`
+    LoginOS       string         `gorm:"column:login_os;comment:操作系统" json:"loginOS"`
+    LoginBrowser  string         `gorm:"comment:浏览器" json:"loginBrowser"`
+    LoginStatus   int            `gorm:"type:tinyint;default:0;comment:登录状态 1:成功 0:失败" json:"loginStatus"`
+    LoginTime     dao.CustomTime `gorm:"comment:登录时间" json:"loginTime"`
+    LogoutTime    dao.CustomTime `gorm:"comment:登出时间" json:"logoutTime"`
+}
