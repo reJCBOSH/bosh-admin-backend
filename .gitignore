@@ -22,3 +22,4 @@ static/
 .idea
 .vscode
 .DS_Store
+ip2region.xdb
