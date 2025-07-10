@@ -2,18 +2,13 @@ package dto
 
 import (
     "bosh-admin/dao"
-    "bosh-admin/dao/model"
 )
 
 type GetDeptListRequest struct {
     Pagination
     DeptName string `json:"deptName" form:"deptName"`
     DeptCode string `json:"deptCode" form:"deptCode"`
-}
-
-type GetDeptListResponse struct {
-    List  []model.SysDept `json:"list"`
-    Total int64           `json:"total"`
+    Status   *int   `json:"status" form:"status" validate:"omitempty|oneof=0 1"`
 }
 
 type AddDeptRequest struct {

@@ -43,13 +43,16 @@ func getDeptChildrenList(dept *model.SysDept, treeMap map[uint][]model.SysDept) 
     return err
 }
 
-func (svc *SysDeptSvc) GetDeptList(deptName, deptCode string, pageNo, pageSize int) ([]model.SysDept, int64, error) {
+func (svc *SysDeptSvc) GetDeptList(deptName, deptCode string, status *int, pageNo, pageSize int) ([]model.SysDept, int64, error) {
     s := dao.NewStatement()
     if deptName != "" {
         s.Where("dept_name LIKE ?", "%"+deptName+"%")
     }
     if deptCode != "" {
         s.Where("dept_code LIKE ?", "%"+deptCode+"%")
+    }
+    if status != nil {
+        s.Where("status = ?", *status)
     }
     s.Pagination(pageNo, pageSize)
     s.OrderBy("display_order DESC")
