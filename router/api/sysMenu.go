@@ -3,12 +3,14 @@ package api
 import (
     "bosh-admin/core/ctx"
     "bosh-admin/handler/api"
+    "bosh-admin/middleware"
 
     "github.com/gin-gonic/gin"
 )
 
 func SetMenuRouter(rg *gin.RouterGroup) {
     group := rg.Group("/sysMenu")
+    groupRecord := rg.Group("/sysMenu").Use(middleware.OperationRecord())
 
     menu := api.NewSysMenuHandler()
     {
@@ -16,8 +18,10 @@ func SetMenuRouter(rg *gin.RouterGroup) {
         group.GET("/getMenuList", ctx.Handler(menu.GetMenuList))
         group.GET("/getMenuInfo", ctx.Handler(menu.GetMenuInfo))
         group.POST("/getAsyncRoutes", ctx.Handler(menu.GetAsyncRoutes))
-        group.POST("/addMenu", ctx.Handler(menu.AddMenu))
-        group.POST("/editMenu", ctx.Handler(menu.EditMenu))
-        group.POST("/delMenu", ctx.Handler(menu.DelMenu))
+    }
+    {
+        groupRecord.POST("/addMenu", ctx.Handler(menu.AddMenu))
+        groupRecord.POST("/editMenu", ctx.Handler(menu.EditMenu))
+        groupRecord.POST("/delMenu", ctx.Handler(menu.DelMenu))
     }
 }

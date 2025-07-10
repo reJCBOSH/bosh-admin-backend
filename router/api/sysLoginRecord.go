@@ -3,16 +3,22 @@ package api
 import (
     "bosh-admin/core/ctx"
     "bosh-admin/handler/api"
+    "bosh-admin/middleware"
+
     "github.com/gin-gonic/gin"
 )
 
 func SetLoginRecordRouter(rg *gin.RouterGroup) {
     group := rg.Group("/sysLoginRecord")
+    groupRecord := rg.Group("/sysLoginRecord").Use(middleware.OperationRecord())
 
     loginRecord := api.NewSysLoginRecordHandler()
     {
         group.GET("/getLoginRecordList", ctx.Handler(loginRecord.GetLoginRecordList))
-        group.POST("/delLoginRecord", ctx.Handler(loginRecord.DelLoginRecord))
-        group.POST("/batchDel", ctx.Handler(loginRecord.BatchDelLoginRecord))
+
+    }
+    {
+        groupRecord.POST("/delLoginRecord", ctx.Handler(loginRecord.DelLoginRecord))
+        groupRecord.POST("/batchDel", ctx.Handler(loginRecord.BatchDelLoginRecord))
     }
 }

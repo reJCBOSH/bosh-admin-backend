@@ -16,6 +16,10 @@ func NewBasicHandler() *BasicHandler {
     return &BasicHandler{}
 }
 
+func (h *BasicHandler) Health(c *ctx.Context) {
+    c.Success("服务正常")
+}
+
 func (h *BasicHandler) Captcha(c *ctx.Context) {
     capConfig := global.Config.Captcha
     driverDigit := &base64Captcha.DriverDigit{
