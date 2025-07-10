@@ -15,5 +15,6 @@ func SetApiRouter(router *gin.Engine) {
         api.SetRoleRouter(group)
         api.SetUserRouter(group)
         api.SetLoginRecordRouter(group)
+        api.SetOperationRecord(group)
     }
 }
