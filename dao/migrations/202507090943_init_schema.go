@@ -24,6 +24,8 @@ var InitSchema = &gormigrate.Migration{
             &model.SysRoleDept{},
             &model.SysRoleMenu{},
             &model.SysUser{},
+            &model.SysLoginRecord{},
+            &model.SysOperationRecord{},
         )
         if err != nil {
             log.Error("初始化数据表失败", err)
