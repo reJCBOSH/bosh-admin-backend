@@ -14,14 +14,14 @@ func SetMenuRouter(rg *gin.RouterGroup) {
 
     menu := api.NewSysMenuHandler()
     {
-        group.GET("/getMenuTree", ctx.Handler(menu.GetMenuTree))
-        group.GET("/getMenuList", ctx.Handler(menu.GetMenuList))
-        group.GET("/getMenuInfo", ctx.Handler(menu.GetMenuInfo))
+        group.GET("/getTree", ctx.Handler(menu.GetMenuTree))
+        group.GET("/getList", ctx.Handler(menu.GetMenuList))
+        group.GET("/getInfo", ctx.Handler(menu.GetMenuInfo))
         group.POST("/getAsyncRoutes", ctx.Handler(menu.GetAsyncRoutes))
     }
     {
-        groupRecord.POST("/addMenu", ctx.Handler(menu.AddMenu))
-        groupRecord.POST("/editMenu", ctx.Handler(menu.EditMenu))
-        groupRecord.POST("/delMenu", ctx.Handler(menu.DelMenu))
+        groupRecord.POST("/add", ctx.Handler(menu.AddMenu))
+        groupRecord.POST("/edit", ctx.Handler(menu.EditMenu))
+        groupRecord.POST("/del", ctx.Handler(menu.DelMenu))
     }
 }

@@ -14,11 +14,11 @@ func SetLoginRecordRouter(rg *gin.RouterGroup) {
 
     loginRecord := api.NewSysLoginRecordHandler()
     {
-        group.GET("/getLoginRecordList", ctx.Handler(loginRecord.GetLoginRecordList))
+        group.GET("/getList", ctx.Handler(loginRecord.GetLoginRecordList))
 
     }
     {
-        groupRecord.POST("/delLoginRecord", ctx.Handler(loginRecord.DelLoginRecord))
+        groupRecord.POST("/del", ctx.Handler(loginRecord.DelLoginRecord))
         groupRecord.POST("/batchDel", ctx.Handler(loginRecord.BatchDelLoginRecord))
     }
 }

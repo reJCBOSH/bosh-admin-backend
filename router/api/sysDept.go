@@ -14,14 +14,14 @@ func SetDeptRouter(rg *gin.RouterGroup) {
 
     dept := api.NewSysDeptHandler()
     {
-        group.GET("/getDeptTree", ctx.Handler(dept.GetDeptTree))
-        group.GET("/getDeptList", ctx.Handler(dept.GetDeptList))
-        group.GET("/getDeptInfo", ctx.Handler(dept.GetDeptInfo))
+        group.GET("/getTree", ctx.Handler(dept.GetDeptTree))
+        group.GET("/getList", ctx.Handler(dept.GetDeptList))
+        group.GET("/getInfo", ctx.Handler(dept.GetDeptInfo))
 
     }
     {
-        groupRecord.POST("/addDept", ctx.Handler(dept.AddDept))
-        groupRecord.POST("/editDept", ctx.Handler(dept.EditDept))
-        groupRecord.POST("/delDept", ctx.Handler(dept.DelDept))
+        groupRecord.POST("/add", ctx.Handler(dept.AddDept))
+        groupRecord.POST("/edit", ctx.Handler(dept.EditDept))
+        groupRecord.POST("/del", ctx.Handler(dept.DelDept))
     }
 }

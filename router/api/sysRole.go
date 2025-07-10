@@ -14,18 +14,18 @@ func SetRoleRouter(rg *gin.RouterGroup) {
 
     role := api.NewSysRoleHandler()
     {
-        group.GET("/getRoleList", ctx.Handler(role.GetRoleList))
-        group.GET("/getRoleInfo", ctx.Handler(role.GetRoleInfo))
-        group.GET("/getRoleMenu", ctx.Handler(role.GetRoleMenu))
-        group.GET("/getRoleMenuIds", ctx.Handler(role.GetRoleMenuIds))
-        group.GET("/getRoleDeptIds", ctx.Handler(role.GetRoleDeptIds))
+        group.GET("/getList", ctx.Handler(role.GetRoleList))
+        group.GET("/getInfo", ctx.Handler(role.GetRoleInfo))
+        group.GET("/getMenu", ctx.Handler(role.GetRoleMenu))
+        group.GET("/getMenuIds", ctx.Handler(role.GetRoleMenuIds))
+        group.GET("/getDeptIds", ctx.Handler(role.GetRoleDeptIds))
     }
     {
-        groupRecord.POST("/addRole", ctx.Handler(role.AddRole))
-        groupRecord.POST("/editRole", ctx.Handler(role.EditRole))
-        groupRecord.POST("/delRole", ctx.Handler(role.DelRole))
-        groupRecord.POST("/setRoleMenuAuth", ctx.Handler(role.SetRoleMenuAuth))
-        groupRecord.POST("/setRoleDataAuth", ctx.Handler(role.SetRoleDataAuth))
-        groupRecord.POST("/setRoleStatus", ctx.Handler(role.SetRoleStatus))
+        groupRecord.POST("/add", ctx.Handler(role.AddRole))
+        groupRecord.POST("/edit", ctx.Handler(role.EditRole))
+        groupRecord.POST("/del", ctx.Handler(role.DelRole))
+        groupRecord.POST("/setMenuAuth", ctx.Handler(role.SetRoleMenuAuth))
+        groupRecord.POST("/setDataAuth", ctx.Handler(role.SetRoleDataAuth))
+        groupRecord.POST("/setStatus", ctx.Handler(role.SetRoleStatus))
     }
 }

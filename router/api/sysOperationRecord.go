@@ -14,11 +14,11 @@ func SetOperationRecord(rg *gin.RouterGroup) {
 
     operationRecord := api.NewSysOperationRecordHandler()
     {
-        group.GET("/getOperationRecordList", ctx.Handler(operationRecord.GetOperationRecordList))
-        group.GET("/getOperationRecordInfo", ctx.Handler(operationRecord.GetOperationRecordInfo))
+        group.GET("/getList", ctx.Handler(operationRecord.GetOperationRecordList))
+        group.GET("/getInfo", ctx.Handler(operationRecord.GetOperationRecordInfo))
     }
     {
-        groupRecord.POST("/delOperationRecord", ctx.Handler(operationRecord.DelOperationRecord))
-        groupRecord.POST("/batchDelOperationRecord", ctx.Handler(operationRecord.BatchDelOperationRecord))
+        groupRecord.POST("/del", ctx.Handler(operationRecord.DelOperationRecord))
+        groupRecord.POST("/batchDel", ctx.Handler(operationRecord.BatchDelOperationRecord))
     }
 }
