@@ -22,11 +22,11 @@ func (h *SysLoginRecord) GetLoginRecordList(c *ctx.Context) {
     if c.HandlerError(err, msg) {
         return
     }
-    records, total, err := h.svc.GetLoginRecordList(req.Username, req.StartDate, req.EndDate, req.PageNo, req.PageSize)
+    list, total, err := h.svc.GetLoginRecordList(req.Username, req.StartDate, req.EndDate, req.PageNo, req.PageSize)
     if c.HandlerError(err) {
         return
     }
-    c.SuccessWithList(records, total)
+    c.SuccessWithList(list, total)
 }
 
 func (h *SysLoginRecord) DelLoginRecord(c *ctx.Context) {

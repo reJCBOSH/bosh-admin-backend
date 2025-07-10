@@ -97,10 +97,7 @@ func (h *SysUser) GetUserList(c *ctx.Context) {
             RoleName: v.Role.RoleName,
         })
     }
-    c.SuccessWithData(dto.GetUserListResponse{
-        List:  list,
-        Total: total,
-    })
+    c.SuccessWithList(list, total)
 }
 
 func (h *SysUser) GetUserInfo(c *ctx.Context) {

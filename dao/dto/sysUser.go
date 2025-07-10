@@ -40,11 +40,6 @@ type GetUserListRequest struct {
     DeptId   *uint  `json:"deptId" form:"deptId" validate:"omitempty,gt=0"`        // 部门id
 }
 
-type GetUserListResponse struct {
-    List  []UserListItem `json:"list"`  // 用户列表
-    Total int64          `json:"total"` // 总数
-}
-
 type UserListItem struct {
     Id       uint   `json:"id"`
     Username string `json:"username"`
