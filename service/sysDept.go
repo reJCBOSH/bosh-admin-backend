@@ -1,6 +1,8 @@
 package service
 
 import (
+    "strconv"
+
     "bosh-admin/core/exception"
     "bosh-admin/dao"
     "bosh-admin/dao/dto"
@@ -72,6 +74,16 @@ func (svc *SysDeptSvc) AddDept(dept dto.AddDeptRequest) error {
     }
     if duplicateData > 0 {
         return exception.NewException("部门标识已存在")
+    }
+    if dept.ParentId == 0 {
+        dept.DeptPath = "0"
+    } else {
+        var parentDept model.SysDept
+        parentDept, err = dao.QueryById[model.SysDept](dept.ParentId)
+        if err != nil {
+            return err
+        }
+        dept.DeptPath = parentDept.DeptPath + "," + strconv.Itoa(int(dept.ParentId))
     }
     return dao.Create(&dept, "sys_dept")
 }
