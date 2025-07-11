@@ -8,7 +8,7 @@ type GetDeptListRequest struct {
     Pagination
     DeptName string `json:"deptName" form:"deptName"`
     DeptCode string `json:"deptCode" form:"deptCode"`
-    Status   *int   `json:"status" form:"status" validate:"omitempty|oneof=0 1"`
+    Status   *int   `json:"status" form:"status" validate:"omitnil,oneof=0 1"`
 }
 
 type AddDeptRequest struct {
