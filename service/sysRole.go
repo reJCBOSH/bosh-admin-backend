@@ -27,7 +27,6 @@ func (svc *SysRoleSvc) GetRoleList(roleName, roleCode string, status *int, pageN
         s.Where("status = ?", *status)
     }
     s.Pagination(pageNo, pageSize)
-    s.OrderBy("display_order DESC")
     return dao.QueryList[model.SysRole](s)
 }
 
