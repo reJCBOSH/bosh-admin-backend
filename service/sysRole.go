@@ -89,14 +89,14 @@ func (svc *SysRoleSvc) DelRole(id any) error {
 }
 
 func (svc *SysRoleSvc) GetRoleMenu(roleId any) ([]model.SysMenu, error) {
-    role, err := dao.QueryById[model.SysRole](roleId)
-    if err != nil {
-        return nil, err
-    }
+    //role, err := dao.QueryById[model.SysRole](roleId)
+    //if err != nil {
+    //    return nil, err
+    //}
     s := dao.NewStatement()
-    if role.RoleCode != global.SuperAdmin {
-        s.Where("create_by != ?", 0)
-    }
+    //if role.RoleCode != global.SuperAdmin {
+    //    s.Where("create_by != ?", 0)
+    //}
     s.OrderBy("display_order DESC,id ASC")
     data, _, err := dao.QueryList[model.SysMenu](s)
     return data, err
