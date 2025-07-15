@@ -34,7 +34,7 @@ func (svc *SysRoleSvc) GetRoleById(id any) (model.SysRole, error) {
     return dao.QueryById[model.SysRole](id)
 }
 
-func (svc *SysRoleSvc) AddRole(role dto.AddRoleRequest) error {
+func (svc *SysRoleSvc) AddRole(role dto.AddRoleReq) error {
     s := dao.NewStatement()
     s.Where("role_code = ?", role.RoleCode)
     duplicateCode, err := dao.Count[model.SysRole](s)
@@ -47,7 +47,7 @@ func (svc *SysRoleSvc) AddRole(role dto.AddRoleRequest) error {
     return dao.Create(&role, "sys_role")
 }
 
-func (svc *SysRoleSvc) EditRole(role dto.EditRoleRequest) error {
+func (svc *SysRoleSvc) EditRole(role dto.EditRoleReq) error {
     return dao.Updates(&role, "sys_role")
 }
 

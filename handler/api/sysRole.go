@@ -19,7 +19,7 @@ func NewSysRoleHandler() *SysRoleHandler {
 }
 
 func (h *SysRoleHandler) GetRoleList(c *ctx.Context) {
-    var req dto.GetRoleListRequest
+    var req dto.GetRoleListReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -32,7 +32,7 @@ func (h *SysRoleHandler) GetRoleList(c *ctx.Context) {
 }
 
 func (h *SysRoleHandler) GetRoleInfo(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -45,7 +45,7 @@ func (h *SysRoleHandler) GetRoleInfo(c *ctx.Context) {
 }
 
 func (h *SysRoleHandler) AddRole(c *ctx.Context) {
-    var req dto.AddRoleRequest
+    var req dto.AddRoleReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -58,7 +58,7 @@ func (h *SysRoleHandler) AddRole(c *ctx.Context) {
 }
 
 func (h *SysRoleHandler) EditRole(c *ctx.Context) {
-    var req dto.EditRoleRequest
+    var req dto.EditRoleReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -71,7 +71,7 @@ func (h *SysRoleHandler) EditRole(c *ctx.Context) {
 }
 
 func (h *SysRoleHandler) DelRole(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -84,7 +84,7 @@ func (h *SysRoleHandler) DelRole(c *ctx.Context) {
 }
 
 func (h *SysRoleHandler) GetRoleMenu(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -97,7 +97,7 @@ func (h *SysRoleHandler) GetRoleMenu(c *ctx.Context) {
 }
 
 func (h *SysRoleHandler) GetRoleMenuIds(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -110,7 +110,7 @@ func (h *SysRoleHandler) GetRoleMenuIds(c *ctx.Context) {
 }
 
 func (h *SysRoleHandler) SetRoleMenuAuth(c *ctx.Context) {
-    var req dto.SetRoleMenuAuthRequest
+    var req dto.SetRoleMenuAuthReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -125,7 +125,7 @@ func (h *SysRoleHandler) SetRoleMenuAuth(c *ctx.Context) {
 }
 
 func (h *SysRoleHandler) GetRoleDeptIds(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -138,7 +138,7 @@ func (h *SysRoleHandler) GetRoleDeptIds(c *ctx.Context) {
 }
 
 func (h *SysRoleHandler) SetRoleDataAuth(c *ctx.Context) {
-    var req dto.SetRoleDataAuthRequest
+    var req dto.SetRoleDataAuthReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -153,7 +153,7 @@ func (h *SysRoleHandler) SetRoleDataAuth(c *ctx.Context) {
 }
 
 func (h *SysRoleHandler) SetRoleStatus(c *ctx.Context) {
-    var req dto.SetRoleStatusRequest
+    var req dto.SetRoleStatusReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return

@@ -1,6 +1,6 @@
 package dto
 
-type GetLoginRecordListRequest struct {
+type GetLoginRecordListReq struct {
     Pagination
     Username  string `json:"username" form:"username"`
     StartDate string `json:"startDate" form:"startDate"`

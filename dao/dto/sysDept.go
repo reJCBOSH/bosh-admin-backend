@@ -4,14 +4,14 @@ import (
     "bosh-admin/dao"
 )
 
-type GetDeptListRequest struct {
+type GetDeptListReq struct {
     Pagination
     DeptName string `json:"deptName" form:"deptName"`
     DeptCode string `json:"deptCode" form:"deptCode"`
     Status   *int   `json:"status" form:"status" validate:"omitnil,oneof=0 1"`
 }
 
-type AddDeptRequest struct {
+type AddDeptReq struct {
     dao.AddBasicModel
     ParentId     uint   `json:"parentId" form:"parentId" validate:"gte=0"`                  // 父级id
     DeptName     string `json:"deptName" form:"deptName" validate:"required"`               // 部门名称
@@ -22,7 +22,7 @@ type AddDeptRequest struct {
     DisplayOrder int    `json:"displayOrder" form:"displayOrder" validate:"gte=0,lte=9999"` // 显示顺序
 }
 
-type EditDeptRequest struct {
+type EditDeptReq struct {
     dao.EditBasicModel
     DeptName     string `json:"deptName" form:"deptName" validate:"required"`               // 部门名称
     Remark       string `json:"remark" form:"remark"`                                       // 备注

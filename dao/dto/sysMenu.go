@@ -2,7 +2,7 @@ package dto
 
 import "bosh-admin/dao"
 
-type GetMenuListRequest struct {
+type GetMenuListReq struct {
     Pagination
     Title string `json:"title" form:"title"`
 }
@@ -37,16 +37,16 @@ type MenuItem struct {
     MenuBasicItem
 }
 
-type GetMenuDetailResponse struct {
+type GetMenuDetailResp struct {
     MenuItem
 }
 
-type AddMenuRequest struct {
+type AddMenuReq struct {
     dao.AddBasicModel
     MenuBasicItem
 }
 
-type EditMenuRequest struct {
+type EditMenuReq struct {
     dao.EditBasicModel
     MenuBasicItem
 }

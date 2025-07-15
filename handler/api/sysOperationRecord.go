@@ -17,7 +17,7 @@ func NewSysOperationRecordHandler() *SysOperationRecord {
 }
 
 func (h *SysOperationRecord) GetOperationRecordList(c *ctx.Context) {
-    var req dto.GetOperationRecordListRequest
+    var req dto.GetOperationRecordListReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -46,7 +46,7 @@ func (h *SysOperationRecord) GetOperationRecordList(c *ctx.Context) {
 }
 
 func (h *SysOperationRecord) GetOperationRecordInfo(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -59,7 +59,7 @@ func (h *SysOperationRecord) GetOperationRecordInfo(c *ctx.Context) {
 }
 
 func (h *SysOperationRecord) DelOperationRecord(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -72,7 +72,7 @@ func (h *SysOperationRecord) DelOperationRecord(c *ctx.Context) {
 }
 
 func (h *SysOperationRecord) BatchDelOperationRecord(c *ctx.Context) {
-    var req dto.IdsRequest
+    var req dto.IdsReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return

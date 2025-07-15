@@ -34,7 +34,7 @@ func (h *BasicHandler) Captcha(c *ctx.Context) {
         return
     }
     log.Debug(answer)
-    c.SuccessWithData(dto.CaptchaResponse{
+    c.SuccessWithData(dto.CaptchaResp{
         CaptchaId:     id,
         PicPath:       b64s,
         CaptchaLength: capConfig.KeyLong,

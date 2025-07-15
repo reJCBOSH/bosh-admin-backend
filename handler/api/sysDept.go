@@ -25,7 +25,7 @@ func (h *SysDeptHandler) GetDeptTree(c *ctx.Context) {
 }
 
 func (h *SysDeptHandler) GetDeptList(c *ctx.Context) {
-    var req dto.GetDeptListRequest
+    var req dto.GetDeptListReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -38,7 +38,7 @@ func (h *SysDeptHandler) GetDeptList(c *ctx.Context) {
 }
 
 func (h *SysDeptHandler) GetDeptInfo(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -51,7 +51,7 @@ func (h *SysDeptHandler) GetDeptInfo(c *ctx.Context) {
 }
 
 func (h *SysDeptHandler) AddDept(c *ctx.Context) {
-    var req dto.AddDeptRequest
+    var req dto.AddDeptReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -64,7 +64,7 @@ func (h *SysDeptHandler) AddDept(c *ctx.Context) {
 }
 
 func (h *SysDeptHandler) EditDept(c *ctx.Context) {
-    var req dto.EditDeptRequest
+    var req dto.EditDeptReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -77,7 +77,7 @@ func (h *SysDeptHandler) EditDept(c *ctx.Context) {
 }
 
 func (h *SysDeptHandler) DelDept(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return

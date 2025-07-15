@@ -1,12 +1,12 @@
 package dto
 
-// IdRequest id请求
-type IdRequest struct {
+// IdReq id请求
+type IdReq struct {
     Id uint `json:"id" form:"id" validate:"required,min=1"` // id
 }
 
-// IdsRequest ids请求
-type IdsRequest struct {
+// IdsReq ids请求
+type IdsReq struct {
     Ids []uint `json:"ids" form:"ids" validate:"required,gt=0,dive,min=1"` // ids
 }
 

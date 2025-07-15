@@ -65,7 +65,7 @@ func (svc *SysDeptSvc) GetDeptById(id any) (model.SysDept, error) {
     return dao.QueryById[model.SysDept](id)
 }
 
-func (svc *SysDeptSvc) AddDept(dept dto.AddDeptRequest) error {
+func (svc *SysDeptSvc) AddDept(dept dto.AddDeptReq) error {
     s := dao.NewStatement()
     s.Where("dept_code = ?", dept.DeptCode)
     duplicateData, err := dao.Count[model.SysDept](s)
@@ -88,7 +88,7 @@ func (svc *SysDeptSvc) AddDept(dept dto.AddDeptRequest) error {
     return dao.Create(&dept, "sys_dept")
 }
 
-func (svc *SysDeptSvc) EditDept(dept dto.EditDeptRequest) error {
+func (svc *SysDeptSvc) EditDept(dept dto.EditDeptReq) error {
     d, err := dao.QueryById[model.SysDept](dept.Id)
     if err != nil {
         return err

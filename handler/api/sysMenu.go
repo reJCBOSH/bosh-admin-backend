@@ -27,7 +27,7 @@ func (h *SysMenuHandler) GetMenuTree(c *ctx.Context) {
 }
 
 func (h *SysMenuHandler) GetMenuList(c *ctx.Context) {
-    var req dto.GetMenuListRequest
+    var req dto.GetMenuListReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -70,7 +70,7 @@ func (h *SysMenuHandler) GetMenuList(c *ctx.Context) {
 }
 
 func (h *SysMenuHandler) GetMenuInfo(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -110,7 +110,7 @@ func (h *SysMenuHandler) GetMenuInfo(c *ctx.Context) {
 }
 
 func (h *SysMenuHandler) AddMenu(c *ctx.Context) {
-    var req dto.AddMenuRequest
+    var req dto.AddMenuReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -123,7 +123,7 @@ func (h *SysMenuHandler) AddMenu(c *ctx.Context) {
 }
 
 func (h *SysMenuHandler) EditMenu(c *ctx.Context) {
-    var req dto.EditMenuRequest
+    var req dto.EditMenuReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -136,7 +136,7 @@ func (h *SysMenuHandler) EditMenu(c *ctx.Context) {
 }
 
 func (h *SysMenuHandler) DelMenu(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return

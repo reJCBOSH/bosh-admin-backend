@@ -58,7 +58,7 @@ func (svc *SysMenuSvc) GetMenuById(id any) (model.SysMenu, error) {
     return dao.QueryById[model.SysMenu](id)
 }
 
-func (svc *SysMenuSvc) AddMenu(menu dto.AddMenuRequest) error {
+func (svc *SysMenuSvc) AddMenu(menu dto.AddMenuReq) error {
     s := dao.NewStatement()
     if menu.MenuType < 3 {
         s.Where("menu_type < ?", 3)
@@ -84,7 +84,7 @@ func (svc *SysMenuSvc) AddMenu(menu dto.AddMenuRequest) error {
     return dao.Create(&menu, "sys_menu")
 }
 
-func (svc *SysMenuSvc) EditMenu(menu dto.EditMenuRequest) error {
+func (svc *SysMenuSvc) EditMenu(menu dto.EditMenuReq) error {
     m, err := dao.QueryById[model.SysMenu](menu.Id)
     if err != nil {
         return err

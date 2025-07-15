@@ -1,6 +1,6 @@
 package dto
 
-type GetOperationRecordListRequest struct {
+type GetOperationRecordListReq struct {
     Pagination
     Username  string `json:"username" form:"username"`
     Method    string `json:"method" form:"method"`
