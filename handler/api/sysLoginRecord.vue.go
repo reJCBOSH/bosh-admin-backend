@@ -22,7 +22,7 @@ func (h *SysLoginRecord) GetLoginRecordList(c *ctx.Context) {
     if c.HandlerError(err, msg) {
         return
     }
-    list, total, err := h.svc.GetLoginRecordList(req.Username, req.StartDate, req.EndDate, req.PageNo, req.PageSize)
+    list, total, err := h.svc.GetLoginRecordList(req.Username, req.StartTime, req.EndTime, req.PageNo, req.PageSize)
     if c.HandlerError(err) {
         return
     }
