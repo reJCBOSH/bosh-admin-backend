@@ -131,7 +131,7 @@ func DelById[T any](id any) error {
 // DelByIds 通过id批量删除
 func DelByIds[T any](ids ...any) error {
     model := new(T)
-    return GormDB().Delete(model, ids).Error
+    return GormDB().Delete(model, ids...).Error
 }
 
 // Count 统计数量
