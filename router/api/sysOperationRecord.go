@@ -8,9 +8,9 @@ import (
     "github.com/gin-gonic/gin"
 )
 
-func SetOperationRecord(rg *gin.RouterGroup) {
+func SetOperationRecordRouter(rg *gin.RouterGroup) {
     group := rg.Group("/sysOperationRecord")
-    groupRecord := rg.Group("/sysOperationRecordRecord").Use(middleware.OperationRecord())
+    groupRecord := rg.Group("/sysOperationRecord").Use(middleware.OperationRecord())
 
     operationRecord := api.NewSysOperationRecordHandler()
     {
