@@ -27,8 +27,10 @@ func (h *SysUser) Login(c *ctx.Context) {
     userAgent := c.Request.UserAgent()
     user, err := h.svc.Login(req.Username, req.Password, req.Captcha, req.CaptchaId)
     if c.HandlerError(err) {
-        if err = h.loginRecordSvc.AddLoginRecord(user.Id, req.Username, loginIP, userAgent, 0); err != nil {
-            log.Error("添加登录记录失败:", err.Error())
+        if user != nil {
+            if err = h.loginRecordSvc.AddLoginRecord(user.Id, req.Username, loginIP, userAgent, 0); err != nil {
+                log.Error("添加登录记录失败:", err.Error())
+            }
         }
         return
     }
