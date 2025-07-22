@@ -35,5 +35,5 @@ type SetRoleDataAuthReq struct {
 
 type SetRoleStatusReq struct {
     RoleId uint `json:"roleId" form:"roleId" validate:"required,gt=0"`
-    Status int  `json:"status" form:"status" validate:"required,oneof=0 1"`
+    Status int  `json:"status" form:"status" validate:"oneof=0 1"`
 }

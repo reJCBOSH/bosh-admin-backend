@@ -16,7 +16,7 @@ type MenuBasicItem struct {
     MenuType        int    `json:"menuType" form:"menuType" validate:"oneof=0 1 2 3"`                                                // 菜单类型 0菜单 1iframe 2外链 3按钮
     Title           string `json:"title" form:"title" validate:"required"`                                                           // 菜单名称
     Icon            string `json:"icon" form:"icon"`                                                                                 // 菜单图标
-    DisplayOrder    int    `json:"displayOrder" form:"displayOrder"`                                                                 // 菜单排序
+    DisplayOrder    int    `json:"displayOrder" form:"displayOrder" validate:"required,gte=0,lte=9999"`                              // 菜单排序
     ExtraIcon       string `json:"extraIcon" form:"extraIcon"`                                                                       // 菜单名称右侧的额外图标
     Transition      string `json:"transition" form:"transition"`                                                                     // 页面动画
     EnterTransition string `json:"enterTransition" form:"enterTransition"`                                                           // 当前页面进场动画
