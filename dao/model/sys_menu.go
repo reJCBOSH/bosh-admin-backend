@@ -6,7 +6,7 @@ import "bosh-admin/dao"
 type SysMenu struct {
     dao.BasicModel
     Path            string    `gorm:"not null;comment:路由路径" json:"path"`
-    Name            string    `gorm:"type:varchar(30);not null;unique;comment:路由名称" json:"name"`
+    Name            string    `gorm:"type:varchar(30);not null;comment:路由名称" json:"name"`
     Redirect        string    `gorm:"comment:路由重定向" json:"redirect"`
     Component       string    `gorm:"comment:按需加载需要展示的页面" json:"component"`
     ParentId        uint      `gorm:"default:0;comment:父级菜单id" json:"parentId"`
