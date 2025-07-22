@@ -11,7 +11,7 @@ type SysLoginRecord struct {
     UserAgent    string         `gorm:"type:text;comment:用户代理" json:"userAgent"`
     LoginOS      string         `gorm:"column:login_os;comment:操作系统" json:"loginOS"`
     LoginBrowser string         `gorm:"comment:浏览器" json:"loginBrowser"`
-    LoginStatus  int            `gorm:"type:tinyint;default:0;comment:登录状态 1:成功 0:失败" json:"loginStatus"`
+    LoginStatus  int            `gorm:"default:0;comment:登录状态 1:成功 0:失败" json:"loginStatus"`
     LoginTime    dao.CustomTime `gorm:"comment:登录时间" json:"loginTime"`
     LogoutTime   dao.CustomTime `gorm:"comment:登出时间" json:"logoutTime"`
 }

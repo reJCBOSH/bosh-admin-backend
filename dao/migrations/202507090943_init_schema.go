@@ -126,6 +126,8 @@ var InitSchema = &gormigrate.Migration{
             &model.SysRoleDept{},
             &model.SysRoleMenu{},
             &model.SysUser{},
+            &model.SysLoginRecord{},
+            &model.SysOperationRecord{},
         )
     },
 }
