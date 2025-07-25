@@ -51,7 +51,9 @@ type UserListItem struct {
     DeptId   uint   `json:"deptId"`
     Remark   string `json:"remark"`
     RoleName string `json:"roleName"`
+    RoleCode string `json:"roleCode"`
     DeptName string `json:"deptName"`
+    DeptCode string `json:"deptCode"`
 }
 
 type AddUserReq struct {

@@ -96,7 +96,9 @@ func (h *SysUser) GetUserList(c *ctx.Context) {
             DeptId:   v.DeptId,
             Remark:   v.Remark,
             DeptName: v.Dept.DeptName,
+            DeptCode: v.Dept.DeptCode,
             RoleName: v.Role.RoleName,
+            RoleCode: v.Role.RoleCode,
         })
     }
     c.SuccessWithList(list, total)
