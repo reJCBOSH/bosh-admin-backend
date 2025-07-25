@@ -141,7 +141,7 @@ func (svc *SysRoleSvc) SetRoleMenuAuth(roleId uint, menuIds []uint) error {
         tx.Rollback()
         return err
     }
-    if err = tx.Save(&roleMenus).Error; err != nil {
+    if err = tx.Create(&roleMenus).Error; err != nil {
         tx.Rollback()
         return err
     }
@@ -197,7 +197,7 @@ func (svc *SysRoleSvc) SetRoleDataAuth(roleId uint, dataAuth int, deptIds []uint
             tx.Rollback()
             return err
         }
-        if err = tx.Save(&roleDepts).Error; err != nil {
+        if err = tx.Create(&roleDepts).Error; err != nil {
             tx.Rollback()
             return err
         }
