@@ -1,6 +1,8 @@
 package service
 
 import (
+    "strconv"
+
     "bosh-admin/core/exception"
     "bosh-admin/dao"
     "bosh-admin/dao/dto"
@@ -43,13 +45,16 @@ func getDeptChildrenList(dept *model.SysDept, treeMap map[uint][]model.SysDept) 
     return err
 }
 
-func (svc *SysDeptSvc) GetDeptList(deptName, deptCode string, pageNo, pageSize int) ([]model.SysDept, int64, error) {
+func (svc *SysDeptSvc) GetDeptList(deptName, deptCode string, status *int, pageNo, pageSize int) ([]model.SysDept, int64, error) {
     s := dao.NewStatement()
     if deptName != "" {
         s.Where("dept_name LIKE ?", "%"+deptName+"%")
     }
     if deptCode != "" {
         s.Where("dept_code LIKE ?", "%"+deptCode+"%")
+    }
+    if status != nil {
+        s.Where("status = ?", *status)
     }
     s.Pagination(pageNo, pageSize)
     s.OrderBy("display_order DESC")
@@ -60,7 +65,7 @@ func (svc *SysDeptSvc) GetDeptById(id any) (model.SysDept, error) {
     return dao.QueryById[model.SysDept](id)
 }
 
-func (svc *SysDeptSvc) AddDept(dept dto.AddDeptRequest) error {
+func (svc *SysDeptSvc) AddDept(dept dto.AddDeptReq) error {
     s := dao.NewStatement()
     s.Where("dept_code = ?", dept.DeptCode)
     duplicateData, err := dao.Count[model.SysDept](s)
@@ -70,10 +75,20 @@ func (svc *SysDeptSvc) AddDept(dept dto.AddDeptRequest) error {
     if duplicateData > 0 {
         return exception.NewException("部门标识已存在")
     }
+    if dept.ParentId == 0 {
+        dept.DeptPath = "0"
+    } else {
+        var parentDept model.SysDept
+        parentDept, err = dao.QueryById[model.SysDept](dept.ParentId)
+        if err != nil {
+            return err
+        }
+        dept.DeptPath = parentDept.DeptPath + "," + strconv.Itoa(int(dept.ParentId))
+    }
     return dao.Create(&dept, "sys_dept")
 }
 
-func (svc *SysDeptSvc) EditDept(dept dto.EditDeptRequest) error {
+func (svc *SysDeptSvc) EditDept(dept dto.EditDeptReq) error {
     d, err := dao.QueryById[model.SysDept](dept.Id)
     if err != nil {
         return err

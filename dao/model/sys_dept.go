@@ -10,7 +10,7 @@ type SysDept struct {
     DeptCode     string    `gorm:"type:varchar(30);not null;unique;comment:部门编码" json:"deptCode"`
     DeptPath     string    `gorm:"default:0;comment:部门路径" json:"deptPath"`
     Remark       string    `gorm:"comment:备注" json:"remark"`
-    Status       int       `gorm:"type:tinyint(1);default:0;comment:状态 0停用 1启用" json:"status"`
-    DisplayOrder int       `gorm:"type:int unsigned;default:0;comment:显示顺序" json:"displayOrder"`
+    Status       int       `gorm:"default:0;comment:状态 0停用 1启用" json:"status"`
+    DisplayOrder int       `gorm:"type:int;default:0;comment:显示顺序" json:"displayOrder"`
     Children     []SysDept `gorm:"-" json:"children"`
 }

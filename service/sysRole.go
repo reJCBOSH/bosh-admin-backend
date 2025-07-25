@@ -27,7 +27,6 @@ func (svc *SysRoleSvc) GetRoleList(roleName, roleCode string, status *int, pageN
         s.Where("status = ?", *status)
     }
     s.Pagination(pageNo, pageSize)
-    s.OrderBy("display_order DESC")
     return dao.QueryList[model.SysRole](s)
 }
 
@@ -35,7 +34,7 @@ func (svc *SysRoleSvc) GetRoleById(id any) (model.SysRole, error) {
     return dao.QueryById[model.SysRole](id)
 }
 
-func (svc *SysRoleSvc) AddRole(role dto.AddRoleRequest) error {
+func (svc *SysRoleSvc) AddRole(role dto.AddRoleReq) error {
     s := dao.NewStatement()
     s.Where("role_code = ?", role.RoleCode)
     duplicateCode, err := dao.Count[model.SysRole](s)
@@ -48,7 +47,7 @@ func (svc *SysRoleSvc) AddRole(role dto.AddRoleRequest) error {
     return dao.Create(&role, "sys_role")
 }
 
-func (svc *SysRoleSvc) EditRole(role dto.EditRoleRequest) error {
+func (svc *SysRoleSvc) EditRole(role dto.EditRoleReq) error {
     return dao.Updates(&role, "sys_role")
 }
 
@@ -90,14 +89,14 @@ func (svc *SysRoleSvc) DelRole(id any) error {
 }
 
 func (svc *SysRoleSvc) GetRoleMenu(roleId any) ([]model.SysMenu, error) {
-    role, err := dao.QueryById[model.SysRole](roleId)
-    if err != nil {
-        return nil, err
-    }
+    //role, err := dao.QueryById[model.SysRole](roleId)
+    //if err != nil {
+    //    return nil, err
+    //}
     s := dao.NewStatement()
-    if role.RoleCode != global.SuperAdmin {
-        s.Where("create_by != ?", 0)
-    }
+    //if role.RoleCode != global.SuperAdmin {
+    //    s.Where("create_by != ?", 0)
+    //}
     s.OrderBy("display_order DESC,id ASC")
     data, _, err := dao.QueryList[model.SysMenu](s)
     return data, err
@@ -142,7 +141,7 @@ func (svc *SysRoleSvc) SetRoleMenuAuth(roleId uint, menuIds []uint) error {
         tx.Rollback()
         return err
     }
-    if err = tx.Save(&roleMenus).Error; err != nil {
+    if err = tx.Create(&roleMenus).Error; err != nil {
         tx.Rollback()
         return err
     }
@@ -198,7 +197,7 @@ func (svc *SysRoleSvc) SetRoleDataAuth(roleId uint, dataAuth int, deptIds []uint
             tx.Rollback()
             return err
         }
-        if err = tx.Save(&roleDepts).Error; err != nil {
+        if err = tx.Create(&roleDepts).Error; err != nil {
             tx.Rollback()
             return err
         }

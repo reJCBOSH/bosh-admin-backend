@@ -3,24 +3,29 @@ package api
 import (
     "bosh-admin/core/ctx"
     "bosh-admin/handler/api"
+    "bosh-admin/middleware"
+
     "github.com/gin-gonic/gin"
 )
 
 func SetRoleRouter(rg *gin.RouterGroup) {
     group := rg.Group("/sysRole")
+    groupRecord := rg.Group("/sysRole").Use(middleware.OperationRecord())
 
     role := api.NewSysRoleHandler()
     {
-        group.GET("/getRoleList", ctx.Handler(role.GetRoleList))
-        group.GET("/getRoleInfo", ctx.Handler(role.GetRoleInfo))
-        group.POST("/addRole", ctx.Handler(role.AddRole))
-        group.POST("/editRole", ctx.Handler(role.EditRole))
-        group.POST("/delRole", ctx.Handler(role.DelRole))
-        group.GET("/getRoleMenu", ctx.Handler(role.GetRoleMenu))
-        group.GET("/getRoleMenuIds", ctx.Handler(role.GetRoleMenuIds))
-        group.POST("/setRoleMenuAuth", ctx.Handler(role.SetRoleMenuAuth))
-        group.GET("/getRoleDeptIds", ctx.Handler(role.GetRoleDeptIds))
-        group.POST("/setRoleDataAuth", ctx.Handler(role.SetRoleDataAuth))
-        group.POST("/setRoleStatus", ctx.Handler(role.SetRoleStatus))
+        group.GET("/getList", ctx.Handler(role.GetRoleList))
+        group.GET("/getInfo", ctx.Handler(role.GetRoleInfo))
+        group.GET("/getMenu", ctx.Handler(role.GetRoleMenu))
+        group.GET("/getMenuIds", ctx.Handler(role.GetRoleMenuIds))
+        group.GET("/getDeptIds", ctx.Handler(role.GetRoleDeptIds))
+    }
+    {
+        groupRecord.POST("/add", ctx.Handler(role.AddRole))
+        groupRecord.POST("/edit", ctx.Handler(role.EditRole))
+        groupRecord.POST("/del", ctx.Handler(role.DelRole))
+        groupRecord.POST("/setMenuAuth", ctx.Handler(role.SetRoleMenuAuth))
+        groupRecord.POST("/setDataAuth", ctx.Handler(role.SetRoleDataAuth))
+        groupRecord.POST("/setStatus", ctx.Handler(role.SetRoleStatus))
     }
 }

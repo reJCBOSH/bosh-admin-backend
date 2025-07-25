@@ -3,6 +3,7 @@ server:
   name: bosh-admin
   url: 127.0.0.1
   port: 8081
+  database: mysql
 
 log:
   rootDir: ./logs

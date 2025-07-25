@@ -2,14 +2,14 @@ package dto
 
 import "bosh-admin/dao"
 
-type LoginRequest struct {
+type LoginReq struct {
     Username  string `json:"username" form:"username" validate:"required"`   // 用户名
     Password  string `json:"password" form:"password" validate:"required"`   // 密码
     Captcha   string `json:"captcha" form:"captcha" validate:"required"`     // 验证码
     CaptchaId string `json:"captchaId" form:"captchaId" validate:"required"` // 验证码id
 }
 
-type LoginResponse struct {
+type LoginResp struct {
     Avatar       string   `json:"avatar"`       // 头像
     Username     string   `json:"username"`     // 用户名
     Nickname     string   `json:"nickname"`     // 昵称
@@ -20,17 +20,17 @@ type LoginResponse struct {
     Expires      int64    `json:"expires"`      // access token过期时间戳
 }
 
-type RefreshTokenRequest struct {
+type RefreshTokenReq struct {
     RefreshToken string `json:"refreshToken" form:"refreshToken" validate:"required"` // refresh token
 }
 
-type RefreshTokenResponse struct {
+type RefreshTokenResp struct {
     AccessToken  string `json:"accessToken"`  // access token
     RefreshToken string `json:"refreshToken"` // refresh token
     Expires      int64  `json:"expires"`      // access token过期时间戳
 }
 
-type GetUserListRequest struct {
+type GetUserListReq struct {
     Pagination
     Username string `json:"username" form:"username"`                              // 用户名
     Nickname string `json:"nickname" form:"nickname"`                              // 昵称
@@ -38,11 +38,6 @@ type GetUserListRequest struct {
     Status   *int   `json:"status" form:"status" validate:"omitempty,oneof=0 1"`   // 状态
     RoleId   *uint  `json:"roleId" form:"roleId" validate:"omitempty,gt=0"`        // 角色id
     DeptId   *uint  `json:"deptId" form:"deptId" validate:"omitempty,gt=0"`        // 部门id
-}
-
-type GetUserListResponse struct {
-    List  []UserListItem `json:"list"`  // 用户列表
-    Total int64          `json:"total"` // 总数
 }
 
 type UserListItem struct {
@@ -56,10 +51,12 @@ type UserListItem struct {
     DeptId   uint   `json:"deptId"`
     Remark   string `json:"remark"`
     RoleName string `json:"roleName"`
+    RoleCode string `json:"roleCode"`
     DeptName string `json:"deptName"`
+    DeptCode string `json:"deptCode"`
 }
 
-type AddUserRequest struct {
+type AddUserReq struct {
     dao.AddBasicModel
     Username string `json:"username" validate:"required"`
     Password string `json:"password" validate:"required"`
@@ -71,7 +68,7 @@ type AddUserRequest struct {
     Remark   string `json:"remark"`
 }
 
-type EditUserRequest struct {
+type EditUserReq struct {
     dao.EditBasicModel
     Username string `json:"username" validate:"required"`
     Nickname string `json:"nickname" validate:"required"`
@@ -82,7 +79,7 @@ type EditUserRequest struct {
     Remark   string `json:"remark"`
 }
 
-type SetUserStatusRequest struct {
+type SetUserStatusReq struct {
     Id     uint `json:"id" validate:"required,gt=0"`
     Status int  `json:"status" validate:"oneof=0 1"`
 }
@@ -99,7 +96,7 @@ type SelfInfo struct {
     Introduce string `json:"introduce"`
 }
 
-type EditSelfInfoRequest struct {
+type EditSelfInfoReq struct {
     dao.EditBasicModel
     Avatar    string `json:"avatar"`
     Nickname  string `json:"nickname" validate:"required"`
@@ -110,7 +107,7 @@ type EditSelfInfoRequest struct {
     Introduce string `json:"introduce"`
 }
 
-type EditSelfPasswordRequest struct {
+type EditSelfPasswordReq struct {
     OldPassword string `json:"oldPassword" validate:"required"`
     NewPassword string `json:"newPassword" validate:"required"`
     RePassword  string `json:"rePassword" validate:"required,eqfield=Password"`

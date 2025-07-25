@@ -12,6 +12,7 @@ func SetBasicRouter(rg *gin.RouterGroup) {
 
     basic := api.NewBasicHandler()
     {
+        group.GET("/health", ctx.Handler(basic.Health))
         group.GET("/captcha", ctx.Handler(basic.Captcha))
     }
 

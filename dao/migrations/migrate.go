@@ -9,7 +9,6 @@ import (
 func MigrateDatabase() error {
     migrationArr := []*gormigrate.Migration{
         InitSchema,
-        CreateSysLoginRecordTable,
     }
 
     m := gormigrate.New(global.GormDB, gormigrate.DefaultOptions, migrationArr)

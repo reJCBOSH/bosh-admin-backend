@@ -1,7 +1,6 @@
 package service
 
 import (
-    "bosh-admin/global"
     "errors"
     "fmt"
     "time"
@@ -10,6 +9,7 @@ import (
     "bosh-admin/dao"
     "bosh-admin/dao/dto"
     "bosh-admin/dao/model"
+    "bosh-admin/global"
     "bosh-admin/utils"
 )
 
@@ -53,7 +53,7 @@ func (svc *SysUserSvc) GetUserById(id any) (model.SysUser, error) {
     return dao.QueryOne[model.SysUser](s)
 }
 
-func (svc *SysUserSvc) AddUser(user dto.AddUserRequest) error {
+func (svc *SysUserSvc) AddUser(user dto.AddUserReq) error {
     s := dao.NewStatement()
     s.Where("username = ?", user.Username)
     count, err := dao.Count[model.SysUser](s)
@@ -63,10 +63,10 @@ func (svc *SysUserSvc) AddUser(user dto.AddUserRequest) error {
     if count > 0 {
         return exception.NewException("用户名已存在")
     }
-    return dao.Create(user, "sys_user")
+    return dao.Create(&user, "sys_user")
 }
 
-func (svc *SysUserSvc) EditUser(user dto.EditUserRequest) error {
+func (svc *SysUserSvc) EditUser(user dto.EditUserReq) error {
     u, err := dao.QueryById[model.SysUser](user.Id)
     if err != nil {
         return err
@@ -82,7 +82,7 @@ func (svc *SysUserSvc) EditUser(user dto.EditUserRequest) error {
             return exception.NewException("用户名已存在")
         }
     }
-    return dao.Updates(user, "sys_user")
+    return dao.Updates(&user, "sys_user")
 }
 
 func (svc *SysUserSvc) DelUser(currentUserId, id uint) error {
@@ -124,7 +124,7 @@ func (svc *SysUserSvc) Login(username, password, captcha, captchaId string) (*mo
         if user.PwdRemainTime == 1 {
             user.PwdRemainTime = 0
             user.Status = 0
-            if err = dao.Updates(user); err != nil {
+            if err = dao.Updates(&user); err != nil {
                 return nil, err
             }
             return nil, exception.NewException("账号已被冻结, 请联系管理员")
@@ -159,7 +159,7 @@ func (svc *SysUserSvc) ResetPassword(currentUserId, id uint) error {
     }
     user.PwdRemainTime = 5
     user.PwdUpdatedAt = dao.CustomTime(time.Now().Local())
-    return dao.Updates(user)
+    return dao.Updates(&user)
 }
 
 func (svc *SysUserSvc) SetUserStatus(currentUserId, id uint, status int) error {
@@ -179,14 +179,14 @@ func (svc *SysUserSvc) SetUserStatus(currentUserId, id uint, status int) error {
     return dao.GormDB().Model(model.SysUser{}).Where("id = ?", id).UpdateColumn("status", status).Error
 }
 
-func (svc *SysUserSvc) EditSelfInfo(currentUserId uint, info dto.EditSelfInfoRequest) error {
+func (svc *SysUserSvc) EditSelfInfo(currentUserId uint, info dto.EditSelfInfoReq) error {
     if currentUserId != info.Id {
         return exception.NewException("无法修改其他用户信息")
     }
-    return dao.Updates(info, "sys_user")
+    return dao.Updates(&info, "sys_user")
 }
 
-func (svc *SysUserSvc) EditSelfPassword(currentUserId uint, info dto.EditSelfPasswordRequest) error {
+func (svc *SysUserSvc) EditSelfPassword(currentUserId uint, info dto.EditSelfPasswordReq) error {
     user, err := dao.QueryById[model.SysUser](currentUserId)
     if err != nil {
         return err
@@ -200,5 +200,5 @@ func (svc *SysUserSvc) EditSelfPassword(currentUserId uint, info dto.EditSelfPas
     }
     user.PwdRemainTime = 5
     user.PwdUpdatedAt = dao.CustomTime(time.Now().Local())
-    return dao.Updates(user)
+    return dao.Updates(&user)
 }

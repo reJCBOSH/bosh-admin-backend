@@ -11,12 +11,12 @@ import (
     "gorm.io/gorm/schema"
 )
 
-// ConnectMysql 连接mysql
+// ConnectMysql 连接Mysql
 func ConnectMysql(m config.Mysql) *gorm.DB {
     if m.Database == "" {
         return nil
     }
-    err := initDatabase(m)
+    err := initMysql(m)
     if err != nil {
         log.Error("初始化数据库失败:", err)
         return nil
@@ -47,8 +47,8 @@ func ConnectMysql(m config.Mysql) *gorm.DB {
     return db
 }
 
-// 初始化数据库
-func initDatabase(m config.Mysql) error {
+// 初始化Mysql数据库
+func initMysql(m config.Mysql) error {
     // 不指定数据库连接Mysql
     dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/?%s", m.Username, m.Password, m.IP, m.Port, m.Config)
     db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})

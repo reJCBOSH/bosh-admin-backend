@@ -18,7 +18,7 @@ func NewSysUserHandler() *SysUser {
 }
 
 func (h *SysUser) Login(c *ctx.Context) {
-    var req dto.LoginRequest
+    var req dto.LoginReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -27,8 +27,10 @@ func (h *SysUser) Login(c *ctx.Context) {
     userAgent := c.Request.UserAgent()
     user, err := h.svc.Login(req.Username, req.Password, req.Captcha, req.CaptchaId)
     if c.HandlerError(err) {
-        if err = h.loginRecordSvc.AddLoginRecord(user.Id, req.Username, loginIP, userAgent, 0); err != nil {
-            log.Error("添加登录记录失败:", err.Error())
+        if user != nil {
+            if err = h.loginRecordSvc.AddLoginRecord(user.Id, req.Username, loginIP, userAgent, 0); err != nil {
+                log.Error("添加登录记录失败:", err.Error())
+            }
         }
         return
     }
@@ -42,7 +44,7 @@ func (h *SysUser) Login(c *ctx.Context) {
     if err = h.loginRecordSvc.AddLoginRecord(user.Id, req.Username, loginIP, userAgent, 1); err != nil {
         log.Error("添加登录记录失败:", err.Error())
     }
-    c.SuccessWithData(dto.LoginResponse{
+    c.SuccessWithData(dto.LoginResp{
         Avatar:       user.Avatar,
         Username:     user.Username,
         Nickname:     user.Nickname,
@@ -55,7 +57,7 @@ func (h *SysUser) Login(c *ctx.Context) {
 }
 
 func (h *SysUser) RefreshToken(c *ctx.Context) {
-    var req dto.RefreshTokenRequest
+    var req dto.RefreshTokenReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -64,7 +66,7 @@ func (h *SysUser) RefreshToken(c *ctx.Context) {
     if c.HandlerError(err) {
         return
     }
-    c.SuccessWithData(dto.RefreshTokenResponse{
+    c.SuccessWithData(dto.RefreshTokenResp{
         AccessToken:  accessToken,
         RefreshToken: refreshToken,
         Expires:      expires,
@@ -72,7 +74,7 @@ func (h *SysUser) RefreshToken(c *ctx.Context) {
 }
 
 func (h *SysUser) GetUserList(c *ctx.Context) {
-    var req dto.GetUserListRequest
+    var req dto.GetUserListReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -94,17 +96,16 @@ func (h *SysUser) GetUserList(c *ctx.Context) {
             DeptId:   v.DeptId,
             Remark:   v.Remark,
             DeptName: v.Dept.DeptName,
+            DeptCode: v.Dept.DeptCode,
             RoleName: v.Role.RoleName,
+            RoleCode: v.Role.RoleCode,
         })
     }
-    c.SuccessWithData(dto.GetUserListResponse{
-        List:  list,
-        Total: total,
-    })
+    c.SuccessWithList(list, total)
 }
 
 func (h *SysUser) GetUserInfo(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -130,7 +131,7 @@ func (h *SysUser) GetUserInfo(c *ctx.Context) {
 }
 
 func (h *SysUser) AddUser(c *ctx.Context) {
-    var req dto.AddUserRequest
+    var req dto.AddUserReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -143,7 +144,7 @@ func (h *SysUser) AddUser(c *ctx.Context) {
 }
 
 func (h *SysUser) EditUser(c *ctx.Context) {
-    var req dto.EditUserRequest
+    var req dto.EditUserReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -156,7 +157,7 @@ func (h *SysUser) EditUser(c *ctx.Context) {
 }
 
 func (h *SysUser) DelUser(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -174,7 +175,7 @@ func (h *SysUser) DelUser(c *ctx.Context) {
 }
 
 func (h *SysUser) ResetPassword(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -192,7 +193,7 @@ func (h *SysUser) ResetPassword(c *ctx.Context) {
 }
 
 func (h *SysUser) SetUserStatus(c *ctx.Context) {
-    var req dto.SetUserStatusRequest
+    var req dto.SetUserStatusReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -234,7 +235,7 @@ func (h *SysUser) GetSelfInfo(c *ctx.Context) {
 }
 
 func (h *SysUser) EditSelfInfo(c *ctx.Context) {
-    var req dto.EditSelfInfoRequest
+    var req dto.EditSelfInfoReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -252,7 +253,7 @@ func (h *SysUser) EditSelfInfo(c *ctx.Context) {
 }
 
 func (h *SysUser) EditSelfPassword(c *ctx.Context) {
-    var req dto.EditSelfPasswordRequest
+    var req dto.EditSelfPasswordReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return

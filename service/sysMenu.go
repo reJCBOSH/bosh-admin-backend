@@ -50,7 +50,7 @@ func (svc *SysMenuSvc) GetMenuList(title string, pageNo, pageSize int) ([]model.
         s.Where("title LIKE ?", "%"+title+"%")
     }
     s.Pagination(pageNo, pageSize)
-    s.OrderBy("display_order DESC")
+    s.OrderBy("display_order DESC,id ASC")
     return dao.QueryList[model.SysMenu](s)
 }
 
@@ -58,7 +58,7 @@ func (svc *SysMenuSvc) GetMenuById(id any) (model.SysMenu, error) {
     return dao.QueryById[model.SysMenu](id)
 }
 
-func (svc *SysMenuSvc) AddMenu(menu dto.AddMenuRequest) error {
+func (svc *SysMenuSvc) AddMenu(menu dto.AddMenuReq) error {
     s := dao.NewStatement()
     if menu.MenuType < 3 {
         s.Where("menu_type < ?", 3)
@@ -84,7 +84,7 @@ func (svc *SysMenuSvc) AddMenu(menu dto.AddMenuRequest) error {
     return dao.Create(&menu, "sys_menu")
 }
 
-func (svc *SysMenuSvc) EditMenu(menu dto.EditMenuRequest) error {
+func (svc *SysMenuSvc) EditMenu(menu dto.EditMenuReq) error {
     m, err := dao.QueryById[model.SysMenu](menu.Id)
     if err != nil {
         return err
@@ -185,7 +185,7 @@ func (svc *SysMenuSvc) GetAsyncRoutes(roleId uint, roleCode string) ([]dto.PureM
     if roleCode != global.SuperAdmin {
         DB = DB.Where("id IN ?", roleMenuIds)
     }
-    err := DB.Where("menu_type < ?", 3).Order("display_order DESC").Find(&buttons).Error
+    err := DB.Where("menu_type = ?", 3).Order("display_order DESC").Find(&buttons).Error
     if err != nil {
         return nil, err
     }

@@ -1,6 +1,7 @@
 package router
 
 import (
+    "bosh-admin/middleware"
     "bosh-admin/router/api"
 
     "github.com/gin-gonic/gin"
@@ -8,12 +9,20 @@ import (
 
 func SetApiRouter(router *gin.Engine) {
     group := router.Group("/api")
+
+    public := group.Group("")
     {
-        api.SetBasicRouter(group)
-        api.SetMenuRouter(group)
-        api.SetDeptRouter(group)
-        api.SetRoleRouter(group)
-        api.SetUserRouter(group)
-        api.SetLoginRecordRouter(group)
+        api.SetBasicRouter(public)
+    }
+
+    private := group.Group("")
+    private.Use(middleware.JWTApiAuth())
+    {
+        api.SetMenuRouter(private)
+        api.SetDeptRouter(private)
+        api.SetRoleRouter(private)
+        api.SetUserRouter(private)
+        api.SetLoginRecordRouter(private)
+        api.SetOperationRecordRouter(private)
     }
 }

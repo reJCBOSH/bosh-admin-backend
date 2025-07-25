@@ -17,20 +17,20 @@ func NewSysLoginRecordHandler() *SysLoginRecord {
 }
 
 func (h *SysLoginRecord) GetLoginRecordList(c *ctx.Context) {
-    var req dto.GetLoginRecordListRequest
+    var req dto.GetLoginRecordListReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
     }
-    records, total, err := h.svc.GetLoginRecordList(req.Username, req.StartDate, req.EndDate, req.PageNo, req.PageSize)
+    list, total, err := h.svc.GetLoginRecordList(req.Username, req.StartTime, req.EndTime, req.PageNo, req.PageSize)
     if c.HandlerError(err) {
         return
     }
-    c.SuccessWithList(records, total)
+    c.SuccessWithList(list, total)
 }
 
 func (h *SysLoginRecord) DelLoginRecord(c *ctx.Context) {
-    var req dto.IdRequest
+    var req dto.IdReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
@@ -43,7 +43,7 @@ func (h *SysLoginRecord) DelLoginRecord(c *ctx.Context) {
 }
 
 func (h *SysLoginRecord) BatchDelLoginRecord(c *ctx.Context) {
-    var req dto.IdsRequest
+    var req dto.IdsReq
     msg, err := c.ValidateParams(&req)
     if c.HandlerError(err, msg) {
         return
