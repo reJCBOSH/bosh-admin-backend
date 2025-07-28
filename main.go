@@ -13,6 +13,7 @@ import (
     "bosh-admin/core/log"
     "bosh-admin/global"
     "bosh-admin/initialize"
+    "bosh-admin/utils"
 )
 
 func main() {
@@ -33,6 +34,10 @@ func main() {
     initialize.InitIp2Region()
     // 初始化参数校验
     initialize.InitValidator()
+    // 初始化定时任务
+    if !utils.IsDev() {
+        initialize.InitCron()
+    }
     // 初始化路由
     initialize.InitRouter()
 

@@ -15,6 +15,13 @@ func IsProd() bool {
     return false
 }
 
+func IsDev() bool {
+    if global.Config.Server.Env == global.DEV {
+        return true
+    }
+    return false
+}
+
 // IP2Region IP转地理位置
 func IP2Region(ip string) string {
     result, err := global.XdbSearcher.SearchByStr(ip)
