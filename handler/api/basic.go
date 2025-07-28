@@ -5,15 +5,20 @@ import (
     "bosh-admin/core/log"
     "bosh-admin/dao/dto"
     "bosh-admin/global"
+    "bosh-admin/service/upload"
     "bosh-admin/utils"
 
     "github.com/mojocn/base64Captcha"
 )
 
-type BasicHandler struct{}
+type BasicHandler struct {
+    ossSvc *upload.OssSvc
+}
 
 func NewBasicHandler() *BasicHandler {
-    return &BasicHandler{}
+    return &BasicHandler{
+        ossSvc: upload.NewOssSvc(),
+    }
 }
 
 func (h *BasicHandler) Health(c *ctx.Context) {
@@ -39,4 +44,23 @@ func (h *BasicHandler) Captcha(c *ctx.Context) {
         PicPath:       b64s,
         CaptchaLength: capConfig.KeyLong,
     })
+}
+
+func (h *BasicHandler) Upload(c *ctx.Context) {
+    file, err := c.FormFile("file")
+    if c.HandlerError(err, "上传失败") {
+        return
+    }
+    where := c.PostForm("where")
+    resource, err := h.ossSvc.Upload(file, where, "api", c.ClientIP())
+    if c.HandlerError(err) {
+        return
+    }
+    data := dto.UploadResp{
+        Id:     resource.Id,
+        Status: "success",
+        Name:   resource.FileName,
+        Url:    resource.FullPath,
+    }
+    c.SuccessWithData(data)
 }

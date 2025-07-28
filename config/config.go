@@ -1,12 +1,14 @@
 package config
 
 type Config struct {
-    Server  Server  `mapstructure:"server" json:"server" yaml:"server"`    // 服务配置
-    Log     Log     `mapstructure:"log" json:"log" yaml:"log"`             // 日志配置
-    Mysql   Mysql   `mapstructure:"mysql" json:"mysql" yaml:"mysql"`       // Mysql 配置
-    Pgsql   Pgsql   `mapstructure:"pgsql" json:"pgsql" yaml:"pgsql"`       // Pgsql 配置
-    JWT     JWT     `mapstructure:"jwt" json:"jwt" yaml:"jwt"`             // JWT 配置
-    Captcha Captcha `mapstructure:"captcha" json:"captcha" yaml:"captcha"` // 图片验证码配置
+    Server    Server    `mapstructure:"server" json:"server" yaml:"server"`          // 服务配置
+    Log       Log       `mapstructure:"log" json:"log" yaml:"log"`                   // 日志配置
+    Mysql     Mysql     `mapstructure:"mysql" json:"mysql" yaml:"mysql"`             // Mysql 配置
+    Pgsql     Pgsql     `mapstructure:"pgsql" json:"pgsql" yaml:"pgsql"`             // Pgsql 配置
+    JWT       JWT       `mapstructure:"jwt" json:"jwt" yaml:"jwt"`                   // JWT 配置
+    Captcha   Captcha   `mapstructure:"captcha" json:"captcha" yaml:"captcha"`       // 图片验证码配置
+    Local     Local     `mapstructure:"local" json:"local" yaml:"local"`             // 本地文件存储配置
+    AliyunOss AliyunOss `mapstructure:"aliyunOss" json:"aliyunOss" yaml:"aliyunOss"` // 阿里云OSS配置
 }
 
 // Server 服务配置
@@ -16,6 +18,7 @@ type Server struct {
     Url      string `mapstructure:"url" json:"url" yaml:"url"`                // 服务地址
     Port     int    `mapstructure:"port" json:"port" yaml:"port"`             // 服务端口
     Database string `mapstructure:"database" json:"database" yaml:"database"` // 数据库类型
+    OssType  string `mapstructure:"ossType" json:"ossType" yaml:"ossType"`    // 存储类型
 }
 
 // Log 日志配置
@@ -67,4 +70,20 @@ type Captcha struct {
     KeyLong   int `mapstructure:"keyLong" json:"keyLong" yaml:"keyLong"`       // 验证码长度
     ImgWidth  int `mapstructure:"imgWidth" json:"imgWidth" yaml:"imgWidth"`    // 图片宽度
     ImgHeight int `mapstructure:"imgHeight" json:"imgHeight" yaml:"imgHeight"` // 图片高度
+}
+
+// Local 本地文件配置
+type Local struct {
+    Path      string `mapstructure:"path" json:"path" yaml:"path"`                // 本地文件访问路径
+    StorePath string `mapstructure:"storePath" json:"storePath" yaml:"storePath"` // 本地文件存储路径
+}
+
+// AliyunOss 阿里云OSS配置
+type AliyunOss struct {
+    Endpoint        string `mapstructure:"endpoint" json:"endpoint" yaml:"endpoint"`
+    AccessKeyId     string `mapstructure:"accessKeyId" json:"accessKeyId" yaml:"accessKeyId"`
+    AccessKeySecret string `mapstructure:"accessKeySecret" json:"accessKeySecret" yaml:"accessKeySecret"`
+    BucketName      string `mapstructure:"bucketName" json:"bucketName" yaml:"bucketName"`
+    BucketUrl       string `mapstructure:"bucketUrl" json:"bucketUrl" yaml:"bucketUrl"`
+    BasePath        string `mapstructure:"basePath" json:"basePath" yaml:"basePath"`
 }

@@ -14,6 +14,7 @@ func SetBasicRouter(rg *gin.RouterGroup) {
     {
         group.GET("/health", ctx.Handler(basic.Health))
         group.GET("/captcha", ctx.Handler(basic.Captcha))
+        group.POST("/upload", ctx.Handler(basic.Upload))
     }
 
     user := api.NewSysUserHandler()
