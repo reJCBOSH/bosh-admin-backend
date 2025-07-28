@@ -6,7 +6,6 @@ import (
     "time"
 
     "bosh-admin/core/exception"
-    "bosh-admin/core/log"
     "bosh-admin/global"
 
     "github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -30,8 +29,7 @@ func NewBucket() (*oss.Bucket, error) {
 func AliyunOssUpload(src multipart.File, filename, where string) (string, string, error) {
     bucket, err := NewBucket()
     if err != nil {
-        log.Error("创建存储桶失败:", err.Error())
-        return "", "", exception.NewException("创建存储桶失败")
+        return "", "", exception.NewException("创建存储桶失败", err)
     }
     if where == "" {
         where = "default"
@@ -40,8 +38,7 @@ func AliyunOssUpload(src multipart.File, filename, where string) (string, string
     storePath := filepath.Join(dirPath, filename)
     fullPath := filepath.Join(global.Config.AliyunOss.BucketUrl, storePath)
     if err = bucket.PutObject(storePath, src); err != nil {
-        log.Error("上传文件失败:", err.Error())
-        return "", "", exception.NewException("上传文件失败")
+        return "", "", exception.NewException("上传文件失败", err)
     }
     return storePath, fullPath, nil
 }

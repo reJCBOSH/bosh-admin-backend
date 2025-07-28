@@ -9,7 +9,6 @@ import (
     "time"
 
     "bosh-admin/core/exception"
-    "bosh-admin/core/log"
     "bosh-admin/global"
 )
 
@@ -28,21 +27,18 @@ func LocalUpload(src multipart.File, filename, where string) (string, string, er
     }
     err := os.MkdirAll(dirPath, os.ModePerm)
     if err != nil {
-        log.Error("创建目录失败:", err.Error())
-        return "", "", exception.NewException("创建目录失败")
+        return "", "", exception.NewException("创建目录失败", err)
     }
     out, err := os.Create(storePath)
     if err != nil {
-        log.Error("创建文件失败:", err.Error())
-        return "", "", exception.NewException("创建文件失败")
+        return "", "", exception.NewException("创建文件失败", err)
     }
     defer func(out *os.File) {
         _ = out.Close()
     }(out)
     _, err = io.Copy(out, src)
     if err != nil {
-        log.Error("写入文件失败:", err.Error())
-        return "", "", exception.NewException("写入文件失败")
+        return "", "", exception.NewException("写入文件失败", err)
     }
     return storePath, fullPath, nil
 }

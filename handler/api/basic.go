@@ -56,11 +56,10 @@ func (h *BasicHandler) Upload(c *ctx.Context) {
     if c.HandlerError(err) {
         return
     }
-    data := dto.UploadResp{
+    c.SuccessWithData(dto.UploadResp{
         Id:     resource.Id,
         Status: "success",
         Name:   resource.FileName,
         Url:    resource.FullPath,
-    }
-    c.SuccessWithData(data)
+    })
 }

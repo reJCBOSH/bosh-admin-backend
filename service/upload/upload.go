@@ -8,7 +8,6 @@ import (
     "mime/multipart"
 
     "bosh-admin/core/exception"
-    "bosh-admin/core/log"
     "bosh-admin/dao"
     "bosh-admin/dao/model"
     "bosh-admin/global"
@@ -25,8 +24,7 @@ func NewOssSvc() *OssSvc {
 func (svc *OssSvc) Upload(file *multipart.FileHeader, where, source, ip string) (*model.Resource, error) {
     src, err := file.Open()
     if err != nil {
-        log.Error("打开文件失败:", err.Error())
-        return nil, exception.NewException("打开文件失败")
+        return nil, exception.NewException("打开文件失败", err)
     }
     defer func(src multipart.File) {
         _ = src.Close()
@@ -34,14 +32,12 @@ func (svc *OssSvc) Upload(file *multipart.FileHeader, where, source, ip string) 
     // 计算MD5校验和
     hash := md5.New()
     if _, err = io.Copy(hash, src); err != nil {
-        log.Error("计算MD5校验和失败:", err.Error())
-        return nil, exception.NewException("计算MD5校验和失败")
+        return nil, exception.NewException("计算MD5校验和失败", err)
     }
     checkSum := hex.EncodeToString(hash.Sum(nil))
     // 重置文件指针到开头
     if _, err = src.Seek(0, 0); err != nil {
-        log.Error("重置文件指针失败:", err.Error())
-        return nil, exception.NewException("重置文件指针失败")
+        return nil, exception.NewException("重置文件指针失败", err)
     }
     s := dao.NewStatement()
     s.Where("source = ? AND check_sum = ?", source, checkSum)
@@ -50,16 +46,14 @@ func (svc *OssSvc) Upload(file *multipart.FileHeader, where, source, ip string) 
         return &resource, nil
     } else {
         if !errors.Is(err, dao.NotFound) {
-            log.Error("查询资源记录失败:", err.Error())
-            return nil, exception.NewException("查询资源记录失败")
+            return nil, exception.NewException("查询资源记录失败", err)
         }
     }
     buf, _ := io.ReadAll(src)
     kind, _ := filetype.Match(buf)
     // 重置文件指针到开头
     if _, err = src.Seek(0, 0); err != nil {
-        log.Error("重置文件指针失败:", err.Error())
-        return nil, exception.NewException("重置文件指针失败")
+        return nil, exception.NewException("重置文件指针失败", err)
     }
     var storePath string
     var fullPath string
@@ -84,8 +78,7 @@ func (svc *OssSvc) Upload(file *multipart.FileHeader, where, source, ip string) 
         CheckSum:  checkSum,
     }
     if err = dao.Create(&newResource); err != nil {
-        log.Error("创建资源记录失败:", err.Error())
-        return nil, exception.NewException("创建资源记录失败")
+        return nil, exception.NewException("创建资源记录失败", err)
     }
     return &newResource, nil
 }
