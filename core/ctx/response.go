@@ -1,12 +1,13 @@
 package ctx
 
 import (
-	"errors"
-	"net/http"
+    "errors"
+    "fmt"
+    "net/http"
 
-	"bosh-admin/core/exception"
-	"bosh-admin/dao"
-	"bosh-admin/global"
+    "bosh-admin/core/exception"
+    "bosh-admin/dao"
+    "bosh-admin/global"
 )
 
 const (
@@ -82,21 +83,29 @@ func (c *Context) Fail(msg ...string) {
 // HandlerError 错误处理
 func (c *Context) HandlerError(err error, msg ...string) bool {
     if err != nil {
-        global.Logger.Error(err)
+        var logErr = err.Error()
         if len(msg) > 0 {
+            logErr = fmt.Sprintf("%s: %s", msg[0], err.Error())
             c.Fail(msg...)
         } else {
             if errors.Is(err, dao.NotFound) {
+                logErr = RecordNotFound
                 c.Fail(RecordNotFound)
             } else {
                 ex := new(exception.Exception)
                 if errors.As(err, &ex) {
+                    logErr = ex.Error()
+                    exceptionErr := ex.GetError()
+                    if exceptionErr != nil {
+                        logErr += ": " + exceptionErr.Error()
+                    }
                     c.Fail(err.Error())
                 } else {
                     c.Fail()
                 }
             }
         }
+        global.Logger.Error(logErr)
         return true
     }
     return false

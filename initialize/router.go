@@ -21,6 +21,8 @@ func InitRouter() {
     // 使用gin默认Logger、Recovery中间件
     r.Use(gin.Logger(), gin.Recovery())
 
+    router.SetStaticRouter(r)
+
     router.SetApiRouter(r)
 
     log.Info("路由注册完成")

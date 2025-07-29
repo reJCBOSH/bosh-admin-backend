@@ -26,6 +26,7 @@ var InitSchema = &gormigrate.Migration{
             &model.SysUser{},
             &model.SysLoginRecord{},
             &model.SysOperationRecord{},
+            &model.Resource{},
         )
         if err != nil {
             log.Error("初始化数据表失败", err)
@@ -128,6 +129,7 @@ var InitSchema = &gormigrate.Migration{
             &model.SysUser{},
             &model.SysLoginRecord{},
             &model.SysOperationRecord{},
+            &model.Resource{},
         )
     },
 }

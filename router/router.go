@@ -7,6 +7,10 @@ import (
     "github.com/gin-gonic/gin"
 )
 
+func SetStaticRouter(router *gin.Engine) {
+    router.StaticFS("/static", gin.Dir("static", false))
+}
+
 func SetApiRouter(router *gin.Engine) {
     group := router.Group("/api")
 

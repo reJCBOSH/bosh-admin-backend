@@ -220,14 +220,9 @@ func (svc *SysMenuSvc) GetAsyncRoutes(roleId uint, roleCode string) ([]dto.PureM
                 KeepAlive:    menu.KeepAlive,
                 FrameSrc:     menu.FrameSrc,
                 FrameLoading: menu.FrameLoading,
-                Transition: dto.PureMenuTransition{
-                    Name:            menu.Transition,
-                    EnterTransition: menu.EnterTransition,
-                    LeaveTransition: menu.LeaveTransition,
-                },
-                HiddenTag:  menu.HiddenTag,
-                ActivePath: menu.ActivePath,
-                FixedTag:   menu.FixedTag,
+                HiddenTag:    menu.HiddenTag,
+                ActivePath:   menu.ActivePath,
+                FixedTag:     menu.FixedTag,
             },
         }
         if btnArr, ok := btnMap[menu.Id]; ok {

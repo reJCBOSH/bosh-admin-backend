@@ -4,6 +4,7 @@ server:
   url: 127.0.0.1
   port: 8081
   database: mysql
+  ossType: "local"
 
 log:
   rootDir: ./logs
@@ -45,3 +46,15 @@ captcha:
   keyLong: 6
   imgWidth: 240
   imgHeight: 80
+
+local:
+  path: "static"
+  storePath : "static"
+
+aliyunOss:
+  endpoint: yourEndpoint
+  accessKeyId: yourAccessKeyId
+  accessKeySecret: yourAccessKeySecret
+  bucketName: yourBucketName
+  bucketUrl: yourBucketUrl
+  basePath: yourBasePath
