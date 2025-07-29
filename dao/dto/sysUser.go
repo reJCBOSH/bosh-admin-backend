@@ -110,5 +110,5 @@ type EditSelfInfoReq struct {
 type EditSelfPasswordReq struct {
     OldPassword string `json:"oldPassword" validate:"required"`
     NewPassword string `json:"newPassword" validate:"required"`
-    RePassword  string `json:"rePassword" validate:"required,eqfield=Password"`
+    RePassword  string `json:"rePassword" validate:"required,eqfield=NewPassword"`
 }
