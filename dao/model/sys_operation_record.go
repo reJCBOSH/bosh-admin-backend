@@ -2,7 +2,6 @@ package model
 
 import "bosh-admin/dao"
 
-// SysOperationRecord 操作日志
 type SysOperationRecord struct {
     dao.BasicModel
     Uid            uint   `gorm:"comment:用户id" json:"uid"`
@@ -20,4 +19,12 @@ type SysOperationRecord struct {
     RequestBody    string `gorm:"type:text;comment:请求Body" json:"requestBody"`
     ResponseHeader string `gorm:"type:text;comment:响应Header" json:"responseHeader"`
     ResponseBody   string `gorm:"type:text;comment:响应Body" json:"responseBody"`
+}
+
+func (SysOperationRecord) TableName() string {
+    return "sys_operation_record"
+}
+
+func (SysOperationRecord) TableComment() string {
+    return "系统操作记录表"
 }

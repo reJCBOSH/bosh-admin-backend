@@ -2,7 +2,6 @@ package model
 
 import "bosh-admin/dao"
 
-// SysMenu 系统菜单
 type SysMenu struct {
     dao.BasicModel
     Path         string    `gorm:"not null;comment:路由路径" json:"path"`
@@ -25,4 +24,12 @@ type SysMenu struct {
     HiddenTag    bool      `gorm:"default:0;comment:当前菜单名称或自定义信息禁止添加到标签页" json:"hiddenTag"`
     FixedTag     bool      `gorm:"default:0;comment:固定标签页" json:"fixedTag"`
     Children     []SysMenu `gorm:"-" json:"children"`
+}
+
+func (SysMenu) TableName() string {
+    return "sys_menu"
+}
+
+func (SysMenu) TableComment() string {
+    return "系统菜单表"
 }
