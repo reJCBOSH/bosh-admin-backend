@@ -1,4 +1,4 @@
-package api
+package handler
 
 import (
     "bosh-admin/core/ctx"

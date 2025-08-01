@@ -2,7 +2,7 @@ package api
 
 import (
     "bosh-admin/core/ctx"
-    "bosh-admin/handler/api"
+    "bosh-admin/handler"
 
     "github.com/gin-gonic/gin"
 )
@@ -10,14 +10,14 @@ import (
 func SetBasicRouter(rg *gin.RouterGroup) {
     group := rg.Group("/basic")
 
-    basic := api.NewBasicHandler()
+    basic := handler.NewBasicHandler()
     {
         group.GET("/health", ctx.Handler(basic.Health))
         group.GET("/captcha", ctx.Handler(basic.Captcha))
         group.POST("/upload", ctx.Handler(basic.Upload))
     }
 
-    user := api.NewSysUserHandler()
+    user := handler.NewSysUserHandler()
     {
         group.POST("/login", ctx.Handler(user.Login))
         group.POST("/refreshToken", ctx.Handler(user.RefreshToken))
