@@ -50,7 +50,7 @@ func InitValidator() {
 		return lancetValidator.IsChinesePhone(fl.Field().String())
 	})
 	_ = validate.RegisterValidation("pwd", func(fl validator.FieldLevel) bool {
-		regex, _ := regexp2.Compile(`^.*(?=.{8,16})(?=.*\d)(?=.*[A-Za-z])(?=.*[!@#$%^&*?\.]).*$`, 0)
+		regex, _ := regexp2.Compile(`^(?=.*\d)(?=.*[A-Za-z])(?=.*[!@#$%^&*?\.])[A-Za-z0-9!@#$%^&*?\.]{8,16}$`, 0)
 		result, _ := regex.MatchString(fl.Field().String())
 		return result
 	})
