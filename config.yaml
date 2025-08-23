@@ -5,6 +5,7 @@ server:
   port: 8081
   database: mysql
   ossType: "local"
+  blackJWT: false
 
 log:
   rootDir: ./logs
