@@ -2,7 +2,7 @@ package api
 
 import (
     "bosh-admin/core/ctx"
-    "bosh-admin/handler/api"
+    "bosh-admin/handler"
     "bosh-admin/middleware"
 
     "github.com/gin-gonic/gin"
@@ -12,7 +12,7 @@ func SetUserRouter(rg *gin.RouterGroup) {
     group := rg.Group("/sysUser")
     groupRecord := rg.Group("/sysUser").Use(middleware.OperationRecord())
 
-    user := api.NewSysUserHandler()
+    user := handler.NewSysUserHandler()
     {
         group.GET("/getList", ctx.Handler(user.GetUserList))
         group.GET("/getInfo", ctx.Handler(user.GetUserInfo))

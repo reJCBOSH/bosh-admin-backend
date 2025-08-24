@@ -15,3 +15,11 @@ type SysLoginRecord struct {
     LoginTime    dao.CustomTime `gorm:"comment:登录时间" json:"loginTime"`
     LogoutTime   dao.CustomTime `gorm:"comment:登出时间" json:"logoutTime"`
 }
+
+func (SysLoginRecord) TableName() string {
+    return "sys_login_record"
+}
+
+func (SysLoginRecord) TableComment() string {
+    return "系统登录记录表"
+}

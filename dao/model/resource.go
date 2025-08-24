@@ -15,3 +15,11 @@ type Resource struct {
     CheckSum       string `gorm:"type:varchar(32);comment:MD5校验和" json:"checkSum"`
     ReferenceCount int    `gorm:"comment:引用计数" json:"referenceCount"`
 }
+
+func (Resource) TableName() string {
+    return "resource"
+}
+
+func (Resource) TableComment() string {
+    return "资源表"
+}

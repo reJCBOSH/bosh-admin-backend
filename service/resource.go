@@ -1,4 +1,4 @@
-package upload
+package service
 
 import (
     "crypto/md5"
@@ -11,17 +11,18 @@ import (
     "bosh-admin/dao"
     "bosh-admin/dao/model"
     "bosh-admin/global"
+    "bosh-admin/utils"
 
     "github.com/h2non/filetype"
 )
 
-type OssSvc struct{}
+type ResourceSvc struct{}
 
-func NewOssSvc() *OssSvc {
-    return &OssSvc{}
+func NewResourceSvc() *ResourceSvc {
+    return &ResourceSvc{}
 }
 
-func (svc *OssSvc) Upload(file *multipart.FileHeader, where, source, ip string) (*model.Resource, error) {
+func (svc *ResourceSvc) Upload(file *multipart.FileHeader, where, source, ip string) (*model.Resource, error) {
     src, err := file.Open()
     if err != nil {
         return nil, exception.NewException("打开文件失败", err)
@@ -40,7 +41,7 @@ func (svc *OssSvc) Upload(file *multipart.FileHeader, where, source, ip string) 
         return nil, exception.NewException("重置文件指针失败", err)
     }
     s := dao.NewStatement()
-    s.Where("source = ? AND check_sum = ?", source, checkSum)
+    s.Where("check_sum = ?", checkSum)
     resource, err := dao.QueryOne[model.Resource](s)
     if err == nil {
         return &resource, nil
@@ -59,9 +60,9 @@ func (svc *OssSvc) Upload(file *multipart.FileHeader, where, source, ip string) 
     var fullPath string
     switch global.Config.Server.OssType {
     case "local":
-        storePath, fullPath, err = LocalUpload(src, file.Filename, where)
+        storePath, fullPath, err = utils.LocalUpload(src, file.Filename, where)
     case "aliyun-oss":
-        storePath, fullPath, err = AliyunOssUpload(src, file.Filename, where)
+        storePath, fullPath, err = utils.AliyunOssUpload(src, file.Filename, where)
     }
     if err != nil {
         return nil, err

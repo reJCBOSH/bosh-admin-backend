@@ -103,10 +103,6 @@ func QueryOne[T any](s *Statement) (data T, err error) {
         DB = DB.Joins(query, args...)
         return true
     })
-    s.preloads.Range(func(query string, args []interface{}) bool {
-        DB = DB.Preload(query, args...)
-        return true
-    })
     DB = DB.Scopes(OtherScope(s.other))
     s.preloads.Range(func(query string, args []interface{}) bool {
         DB = DB.Preload(query, args...)

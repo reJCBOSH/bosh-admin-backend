@@ -1,23 +1,23 @@
-package api
+package handler
 
 import (
     "bosh-admin/core/ctx"
     "bosh-admin/core/log"
     "bosh-admin/dao/dto"
     "bosh-admin/global"
-    "bosh-admin/service/upload"
+    "bosh-admin/service"
     "bosh-admin/utils"
 
     "github.com/mojocn/base64Captcha"
 )
 
 type BasicHandler struct {
-    ossSvc *upload.OssSvc
+    resourceSvc *service.ResourceSvc
 }
 
 func NewBasicHandler() *BasicHandler {
     return &BasicHandler{
-        ossSvc: upload.NewOssSvc(),
+        resourceSvc: service.NewResourceSvc(),
     }
 }
 
@@ -52,7 +52,7 @@ func (h *BasicHandler) Upload(c *ctx.Context) {
         return
     }
     where := c.PostForm("where")
-    resource, err := h.ossSvc.Upload(file, where, "api", c.ClientIP())
+    resource, err := h.resourceSvc.Upload(file, where, "api", c.ClientIP())
     if c.HandlerError(err) {
         return
     }

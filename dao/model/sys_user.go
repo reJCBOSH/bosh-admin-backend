@@ -2,7 +2,6 @@ package model
 
 import "bosh-admin/dao"
 
-// SysUser 系统用户
 type SysUser struct {
     dao.BasicModel
     Username      string         `gorm:"type:varchar(100);not null;unique;comment:用户名" json:"username"`
@@ -22,4 +21,12 @@ type SysUser struct {
     Remark        string         `gorm:"comment:备注" json:"remark"`
     Role          SysRole        `gorm:"foreignKey:RoleId;references:Id" json:"role"`
     Dept          SysDept        `gorm:"foreignKey:DeptId;references:Id" json:"dept"`
+}
+
+func (SysUser) TableName() string {
+    return "sys_user"
+}
+
+func (SysUser) TableComment() string {
+    return "系统用户表"
 }

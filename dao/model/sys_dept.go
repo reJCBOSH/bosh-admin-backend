@@ -2,7 +2,6 @@ package model
 
 import "bosh-admin/dao"
 
-// SysDept 部门
 type SysDept struct {
     dao.BasicModel
     ParentId     uint      `gorm:"default:0;comment:父id" json:"parentId"`
@@ -13,4 +12,12 @@ type SysDept struct {
     Status       int       `gorm:"default:0;comment:状态 0停用 1启用" json:"status"`
     DisplayOrder int       `gorm:"type:int;default:0;comment:显示顺序" json:"displayOrder"`
     Children     []SysDept `gorm:"-" json:"children"`
+}
+
+func (SysDept) TableName() string {
+    return "sys_dept"
+}
+
+func (SysDept) TableComment() string {
+    return "系统部门表"
 }

@@ -2,7 +2,7 @@ package api
 
 import (
     "bosh-admin/core/ctx"
-    "bosh-admin/handler/api"
+    "bosh-admin/handler"
     "bosh-admin/middleware"
 
     "github.com/gin-gonic/gin"
@@ -12,7 +12,7 @@ func SetMenuRouter(rg *gin.RouterGroup) {
     group := rg.Group("/sysMenu")
     groupRecord := rg.Group("/sysMenu").Use(middleware.OperationRecord())
 
-    menu := api.NewSysMenuHandler()
+    menu := handler.NewSysMenuHandler()
     {
         group.GET("/getTree", ctx.Handler(menu.GetMenuTree))
         group.GET("/getList", ctx.Handler(menu.GetMenuList))
