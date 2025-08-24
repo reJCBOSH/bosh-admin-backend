@@ -49,7 +49,11 @@ func (t *CustomTime) Scan(v any) error {
 }
 
 func (t CustomTime) String() string {
-	return time.Time(t).Format(time.DateTime)
+	tt := time.Time(t)
+	if !tt.IsZero() {
+		return time.Time(t).Format(time.DateTime)
+	}
+	return ""
 }
 
 func (t CustomTime) ToTime() time.Time {
@@ -103,7 +107,11 @@ func (t *CustomDate) Scan(v any) error {
 }
 
 func (t CustomDate) String() string {
-	return time.Time(t).Format(time.DateOnly)
+	tt := time.Time(t)
+	if !tt.IsZero() {
+		return time.Time(t).Format(time.DateOnly)
+	}
+	return ""
 }
 
 func (t CustomDate) ToTime() time.Time {
