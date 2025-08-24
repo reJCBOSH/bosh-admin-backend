@@ -15,11 +15,13 @@ type Statement struct {
 	fields    *maputil.OrderedMap[interface{}, []interface{}]
 	joins     *maputil.OrderedMap[string, []interface{}]
 	preloads  *maputil.OrderedMap[string, []interface{}]
-	other     Other
+	offset    int
+	limit     int
+	orderBy   string
 }
 
 // NewStatement 创建查询构造器
-func NewStatement(other ...Other) *Statement {
+func NewStatement() *Statement {
 	s := new(Statement)
 	s.db = GormDB()
 	s.tableName = ""
@@ -27,11 +29,9 @@ func NewStatement(other ...Other) *Statement {
 	s.fields = maputil.NewOrderedMap[any, []any]()
 	s.joins = maputil.NewOrderedMap[string, []any]()
 	s.preloads = maputil.NewOrderedMap[string, []any]()
-	if len(other) > 0 {
-		s.other = other[0]
-	} else {
-		s.other = Other{}
-	}
+	s.offset = 0
+	s.limit = DefaultLimit
+	s.orderBy = ""
 	return s
 }
 
@@ -43,7 +43,9 @@ func (s *Statement) Init() {
 	s.fields = maputil.NewOrderedMap[any, []any]()
 	s.joins = maputil.NewOrderedMap[string, []any]()
 	s.preloads = maputil.NewOrderedMap[string, []any]()
-	s.other = Other{}
+	s.offset = 0
+	s.limit = DefaultLimit
+	s.orderBy = ""
 }
 
 func (s *Statement) Table(tableName string) {
@@ -99,25 +101,18 @@ func (s *Statement) Preload(query string, args ...any) {
 // Pagination 分页
 func (s *Statement) Pagination(pageNo, pageSize int) {
 	if pageNo == -1 {
-		s.other.Offset = -1
+		s.offset = -1
 	} else {
-		if pageSize <= 0 {
-			s.other.Limit = DefaultLimit
-		} else {
-			s.other.Limit = pageSize
+		if pageSize > 0 {
+			s.limit = pageSize
 		}
-		s.other.Offset = pageSize * (pageNo - 1)
+		s.offset = pageSize * (pageNo - 1)
 	}
 }
 
 // OrderBy 排序
 func (s *Statement) OrderBy(orderStr string) {
 	if orderStr != "" {
-		s.other.OrderBy = orderStr
+		s.orderBy = orderStr
 	}
-}
-
-// Other 其他条件
-func (s *Statement) Other(other Other) {
-	s.other = other
 }

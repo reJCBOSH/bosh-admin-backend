@@ -75,13 +75,13 @@ func QueryList[T any](s *Statement) (data []T, total int64, err error) {
 		DB = DB.Joins(query, args...)
 		return true
 	})
-	if s.other.Offset >= 0 && s.other.Limit > 0 {
+	if s.offset >= 0 && s.limit > 0 {
 		err = DB.Count(&total).Error
 		if err != nil {
 			return
 		}
 	}
-	DB = DB.Scopes(OtherScope(s.other))
+	DB = DB.Scopes(PageScope(s.limit, s.offset), OrderByScope(s.orderBy))
 	s.preloads.Range(func(query string, args []interface{}) bool {
 		DB = DB.Preload(query, args...)
 		return true
@@ -104,7 +104,7 @@ func QueryOne[T any](s *Statement) (data T, err error) {
 		DB = DB.Joins(query, args...)
 		return true
 	})
-	DB = DB.Scopes(OtherScope(s.other))
+	DB = DB.Scopes(PageScope(1, 0), OrderByScope(s.orderBy))
 	s.preloads.Range(func(query string, args []interface{}) bool {
 		DB = DB.Preload(query, args...)
 		return true
@@ -169,21 +169,8 @@ func OrderByScope(orderStr string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if orderStr != "" {
 			db = db.Order(orderStr)
-		}
-		return db
-	}
-}
-
-// OtherScope 作用域
-func OtherScope(other Other) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		if other.OrderBy != "" {
-			db = db.Order(other.OrderBy)
 		} else {
 			db = db.Order("id DESC")
-		}
-		if other.Limit > 0 && other.Offset >= 0 {
-			db = db.Offset(other.Offset).Limit(other.Limit)
 		}
 		return db
 	}
