@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	"strconv"
 	"strings"
 	"time"
 
@@ -106,7 +105,7 @@ func (l *CustomLogger) Write(p []byte) (n int, err error) {
 			_ = logger.Close()
 		}(l.logger)
 		l.date = nowDate
-		l.logger.Filename = fmt.Sprintf("%s/%s/%s/%s/%s%s.log", global.Config.Log.RootDir, strconv.Itoa(now.Year()), now.Format("2006-01"), nowDate, nowDate, l.suffix)
+		l.logger.Filename = fmt.Sprintf("%s/%s/%s/%s%s.log", global.Config.Log.RootDir, now.Format("2006-01"), nowDate, nowDate, l.suffix)
 	}
 	return l.logger.Write(p)
 }
@@ -117,7 +116,7 @@ func CustomLoggerWriter(suffix string) *CustomLogger {
 	nowDate := now.Format(time.DateOnly)
 	return &CustomLogger{
 		logger: &lumberjack.Logger{
-			Filename:   fmt.Sprintf("%s/%s/%s/%s/%s%s.log", global.Config.Log.RootDir, strconv.Itoa(now.Year()), now.Format("2006-01"), nowDate, nowDate, suffix),
+			Filename:   fmt.Sprintf("%s/%s/%s/%s%s.log", global.Config.Log.RootDir, now.Format("2006-01"), nowDate, nowDate, suffix),
 			MaxSize:    global.Config.Log.MaxSize,    // 每个日志文件保存的最大尺寸 单位：MB
 			MaxAge:     global.Config.Log.MaxAge,     // 文件最多保存多少天
 			MaxBackups: global.Config.Log.MaxBackups, // 日志文件最多保存多少个备份
