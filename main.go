@@ -38,6 +38,8 @@ func main() {
 	if !utils.IsDev() {
 		initialize.InitCron()
 	}
+	// 初始化websocket
+	initialize.InitWebsocket()
 	// 初始化路由
 	initialize.InitRouter()
 

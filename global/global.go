@@ -2,6 +2,7 @@ package global
 
 import (
 	"bosh-admin/config"
+	"bosh-admin/websocket"
 
 	"github.com/gin-gonic/gin"
 	ut "github.com/go-playground/universal-translator"
@@ -24,6 +25,7 @@ var (
 	GormDB      *gorm.DB           // gorm数据库
 	Router      *gin.Engine        // 路由
 	XdbSearcher *xdb.Searcher      // 全局xdb搜索器
+	WsHub       *websocket.Hub     // websocket hub
 )
 
 const (
